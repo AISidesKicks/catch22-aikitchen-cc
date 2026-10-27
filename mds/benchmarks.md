@@ -125,6 +125,23 @@ visitor picks their pocket from.
   on open ended tasks). Cells at cap render "chain truncated" in the GUI.
 
 
+## Instruct family full walk (run-5e04ff01, 27 oct 2026)
+
+21 rows x 12 instruct modes = 252 cells, all committed (one 4096 refill,
+28 cells structurally unbounded, same pattern as reasoning). Verdict:
+
+- Instruct tags do NOT reliably skip thinking on the 8B. Side by side
+  average tokens per mode land within noise of the reasoning run:
+  low 987 vs 783, socrates 1069 vs 984, high 1512 vs 1662 (instruct
+  LONGER), ultra 2046 vs 2130, deeptree 2536 vs 2231, omni 2632 vs 2228.
+- The card's "instruct = fast, thinking skipped" story does not transfer
+  from the 2.6B sibling to this 8B tune. On the site: instruct cells on
+  the 8B are labeled live verified as not a separate mode, and the 22
+  count is explained as mode NAMES; the honest live contrast is
+  reasoning tiers, effort ladder and structure.
+- Constraint following stays perfect in instruct cells too: banana and
+  no comma rows 24 of 24.
+
 ## Open questions for later runs
 
 - Stock LiquidAI control run (profile `stock` in compose): how much does
