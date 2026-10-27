@@ -13,6 +13,7 @@ import {
   finishRun,
   loadRun,
   nextCell,
+  openDb,
   planCells,
   recordAttempt,
 } from "./db.js";
