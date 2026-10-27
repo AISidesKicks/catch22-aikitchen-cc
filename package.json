@@ -1,0 +1,14 @@
+{
+  "name": "catch22-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "catch22: turbo brilliance reasoning + instruct modes matrix lab",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "worker": "node src/worker.js",
+    "test": "node --test \"tests/**/*.test.mjs\""
+  }
+}
