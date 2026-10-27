@@ -1,0 +1,37 @@
+{
+  "catch22-paradox": {
+    "type": "hand curated",
+    "license": "MIT (this repo)",
+    "note": "On brand Catch 22 flavored paradox prompts, authored for this lab. paradox-mission references the plot of Heller's Catch-22 for educational comment."
+  },
+  "math500-style": {
+    "type": "benchmark style",
+    "license": "row authored locally in the format of https://huggingface.co/datasets/HuggingFaceH4/MATH500 (MIT)",
+    "note": "No rows copied; numeric verifiable answers."
+  },
+  "gsm8k-style": {
+    "type": "benchmark style",
+    "license": "row authored locally in the format of https://huggingface.co/datasets/openai/gsm8k (MIT)",
+    "note": "No rows copied."
+  },
+  "ifeval-style": {
+    "type": "benchmark style",
+    "license": "row authored locally in the format of https://huggingface.co/datasets/google/IFEval (Apache 2.0)",
+    "note": "Verifiable instruction following constraints; no rows copied."
+  },
+  "truthfulqa-style": {
+    "type": "benchmark style",
+    "license": "row authored locally, style follows https://huggingface.co/datasets/truthfulqa/truthfulqa (Apache 2.0)",
+    "note": "Hallucination bait with false premises; no rows copied."
+  },
+  "davidau-card": {
+    "type": "model card examples",
+    "license": "quoted or paraphrased for educational comment, source https://huggingface.co/DavidAU/LFM2.5-8B-A1B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF",
+    "note": "Expected outputs on the card come from their Q8 MAX runs; we do not copy them into expected, we compare qualitatively."
+  },
+  "catch22-topics": {
+    "type": "hand curated",
+    "license": "MIT (this repo)",
+    "note": "Four everyday topic classes (technical, business, creative, everyday) for multi cell runs, in the doolally golden prompt style."
+  }
+}

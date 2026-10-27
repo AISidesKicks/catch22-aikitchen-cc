@@ -1,0 +1,21 @@
+{
+  "by_family": {
+    "benchmark": 6,
+    "card": 3,
+    "paradox": 8,
+    "topic": 4
+  },
+  "by_source": {
+    "catch22-paradox": 8,
+    "catch22-topics": 4,
+    "davidau-card": 3,
+    "gsm8k-style": 1,
+    "ifeval-style": 2,
+    "math500-style": 2,
+    "truthfulqa-style": 1
+  },
+  "expected_rows": 6,
+  "pool": "catch22-mode-topics.jsonl",
+  "rows": 21,
+  "sha256": "4e0c586fec132c33a066cf373378b746a2fe2517fba788f1dd57473b8aebd302"
+}
