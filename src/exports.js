@@ -56,6 +56,9 @@ console.log(`exported ${runs.length} runs -> gui/data.json`);
 
 function esc(s) {
   return String(s ?? "")
+    .replace(/[\u2014\u2013\u2212]/g, "-") // em, en, math minus -> plain hyphen per repo rule
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
