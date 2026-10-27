@@ -18,6 +18,7 @@ import {
   recordAttempt,
 } from "./db.js";
 import { MODES, tagFor } from "./matrix.js";
+import { sendCellSpan } from "./trace.js";
 import * as llama from "./providers/llama.js";
 import * as mock from "./providers/mock.js";
 
@@ -122,6 +123,7 @@ export async function walk(db, opts) {
       console.log(`retry ${seq}/${MAX_ATTEMPTS} cell ${cell.row_id}:${cell.mode} (${result.error ?? "empty reply"})`);
     }
     commitCell(db, cell, { ...result, ok });
+    sendCellSpan(runId, cell, { ...result, ok }).catch(() => {});
     console.log(
       `[${cell.row_id}:${cell.mode}] ${ok ? "ok" : "FAILED"} ${result.latencyMs ?? "?"}ms tokens=${result.tokens ?? "?"}`
     );
