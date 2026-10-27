@@ -149,8 +149,8 @@ Python flow (pixi ctch)  --  dataset building and manifest checks
 - [x] Phoenix tracing: one OTLP span per committed cell, zero dependency protobuf encoder (src/trace.js), live at 127.0.0.1:6006.
 - [x] GUI: live matrix filling, per cell timing, thinking vs answer split (src/gui sources, build to gui/, served by ctch-lab on 3030).
 - [x] Written results in mds/benchmarks.md after the first real run.
-- [ ] Static results page in docs/ (generator exists: npm run gui:docs; needs the short run finished to render final numbers).
-- [ ] Instruct family walk on the full pool (8B verdict recorded in mds/benchmarks.md: not a separate mode on this model, still collect cells).
+- [x] Static results page in docs/ (docs/results.html generated from the lab SQLite by npm run gui:docs).
+- [x] Instruct family walk on the full pool (252 cells committed; live verdict in mds/benchmarks.md: not a separate mode on the 8B, cells labeled honestly).
 
 ## Infrastructure
 
