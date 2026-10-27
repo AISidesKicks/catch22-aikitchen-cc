@@ -102,7 +102,9 @@ export async function walk(db, opts) {
     let seq = seqBase;
     let ok = false;
     let result = null;
-    while (seq < MAX_ATTEMPTS) {
+    let walkAttempts = 0;
+    while (walkAttempts < MAX_ATTEMPTS) {
+      walkAttempts += 1;
       seq += 1;
       result = await runCell(provider, providerOpts, cell);
       recordAttempt(
