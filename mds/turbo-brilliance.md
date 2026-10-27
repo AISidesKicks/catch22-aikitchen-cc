@@ -177,6 +177,31 @@ high concurrency on one H100, and pairs with the DSpark 328M drafter for
 about 2.5x faster decode with identical outputs. Our llama.cpp runs will be
 far below those numbers; the point of the demo is relative deltas.
 
+## Pilot run live results (27 oct 2026)
+
+Full 4 rows x 12 reasoning modes on the Q6_K, worker `run-222573de`,
+48 of 48 cells committed through refills at token caps 2048 then 3072
+then 4096. What the data shows:
+
+- Effort ladder is real and readable in tokens: math row went low 95,
+  medium 91, medium-low 332, ultra 471, high 636, structural modes
+  550 to 900.
+- Correctness baseline holds: math row 12 of 12 cells answer 12, banana
+  row 12 of 12 cells obey "exactly three times" (stock IFEval 91.8
+  matches live).
+- Socrates burns tokens before trivial work: banana row, socrates 446
+  tokens vs omni 125, same perfect answer. Demos the mode contract, not
+  speed.
+- Chain length is unbounded in structural modes: on open ended tasks
+  (churn tree, pinocchio) deeptree, spoon, omni, ultra hit every cap we
+  tried (2048, 3072, 4096) without finishing. The low tag throttles
+  style on easy tasks but NOT budget on hard ones: pinocchio in low
+  mode still ran to cap. For v1 the GUI will show "chain truncated at
+  N" rather than pretending the mode is exhausted.
+- Speed: short answers land in about 1.3 s per cell, long chains at
+  about 240 tokens per second decode on the RTX 4070 (Q6_K, 1B active),
+  matching the doolally live numbers for the same model family.
+
 ## What we can honestly claim with our 22 matrix demo
 
 1. Prompt grammar works the same in CLI chat, plain HTTP and the OpenAI
