@@ -142,12 +142,15 @@ Python flow (pixi ctch)  --  dataset building and manifest checks
 - [x] Research the Turbo Brilliance family: [mds/turbo-brilliance.md](mds/turbo-brilliance.md).
 - [x] Confirm llama.cpp works with the model unmodified (proven in the doolally lab, server 0.7.0-dev build 11870).
 - [x] Clone and expand doolally research notes for this lab.
-- [ ] Dataset: mode topic sets committed with manifest and sources.
-- [ ] Node durable worker that walks the 22 matrix in play modes.
-- [ ] llama.cpp docker services, `ctch-` prefix, plus optional stock-model profile.
-- [ ] GUI: live matrix filling, per cell timing, raw `...` vs answer split.
-- [ ] Written results in mds/benchmarks.md after the first real run.
-- [ ] Static results page in docs/.
+- [x] Weights downloaded and verified: Q6_K in models/gguf with sha256 manifest.
+- [x] Dataset: mode topic sets committed with manifest and sources (21 rows, datasets/.manifest.json).
+- [x] Node durable worker that walks the matrix in play modes (pilot 48/48 committed live; tests cover retry and resume).
+- [x] llama.cpp docker services, `ctch-` prefix, plus optional stock-model profile (`--profile stock`, swap servers on one GPU).
+- [x] Phoenix tracing: one OTLP span per committed cell, zero dependency protobuf encoder (src/trace.js), live at 127.0.0.1:6006.
+- [x] GUI: live matrix filling, per cell timing, thinking vs answer split (src/gui sources, build to gui/, served by ctch-lab on 3030).
+- [x] Written results in mds/benchmarks.md after the first real run.
+- [ ] Static results page in docs/ (generator exists: npm run gui:docs; needs the short run finished to render final numbers).
+- [ ] Instruct family walk on the full pool (8B verdict recorded in mds/benchmarks.md: not a separate mode on this model, still collect cells).
 
 ## Infrastructure
 
