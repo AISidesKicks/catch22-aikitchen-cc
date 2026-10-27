@@ -1,0 +1,37 @@
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+
+# scratch artifacts
+scratch/*
+!scratch/.gitkeep
+
+# generated datasets: the canonical JSONL and manifest are tracked,
+# the CSV view and parquet intermediates stay local
+datasets/*.csv
+datasets/*.parquet
+.cache/
+
+# node
+node_modules/
+
+# python
+__pycache__/
+*.py[cod]
+
+# local environment files
+.env
+.env.*
+!.env.example
+
+# model weights, only the placeholders stay tracked
+models/*
+!models/.gitkeep
+!models/README.md
+!models/gguf/
+models/gguf/*
+!models/gguf/.gitkeep
+
+# gui build output, source lives in src/gui
+gui/*
+!gui/.gitkeep
