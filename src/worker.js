@@ -140,7 +140,8 @@ export function refillTruncated(db, runId, capTokens) {
     .prepare(
       `UPDATE cells SET status = 'pending', reply = NULL, thinking = NULL,
               tokens = NULL, latency_ms = NULL
-       WHERE run_id = ? AND status = 'done' AND tokens >= ?`
+       WHERE run_id = ? AND (tokens >= ? OR status = 'failed')
+         AND status IN ('done', 'failed')`
     )
     .run(runId, capTokens);
   return res.changes;
