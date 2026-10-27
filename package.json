@@ -9,6 +9,9 @@
   },
   "scripts": {
     "worker": "node src/worker.js",
+    "gui": "node src/build-gui.js",
+    "gui:docs": "node src/build-gui.js docs",
+    "server": "node src/server.js",
     "test": "node --test \"tests/**/*.test.mjs\""
   }
 }

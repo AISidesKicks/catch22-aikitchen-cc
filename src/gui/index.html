@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>catch22 - turbo brilliance mode matrix</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <h1>catch22 <span class="dim">// turbo brilliance mode matrix</span></h1>
+  <p class="dim">same prompt, every mode, one local model. honest demo: modes are prompt priming fine tuned at training time, not search algorithms.</p>
+</header>
+
+<nav id="runs"></nav>
+
+<main>
+  <section id="matrix-wrap">
+    <table id="matrix"><thead></thead><tbody></tbody></table>
+  </section>
+  <aside id="detail" hidden>
+    <button id="detail-close" aria-label="close">x</button>
+    <h2 id="detail-title"></h2>
+    <div id="detail-meta" class="dim"></div>
+    <div id="detail-expected"></div>
+    <h3>thinking</h3>
+    <pre id="detail-thinking" class="scroll"></pre>
+    <h3>final answer</h3>
+    <pre id="detail-answer" class="scroll"></pre>
+  </aside>
+</main>
+
+<footer class="dim">
+  <span id="foot">loading...</span>
+  <span id="legend">
+    <i class="p pending"></i> pending <i class="p done"></i> done <i class="p failed"></i> failed <i class="p cap"></i> chain truncated
+  </span>
+</footer>
+
+<script type="module" src="/app.js"></script>
+</body>
+</html>

@@ -13,6 +13,7 @@ services:
     image: ghcr.io/ggml-org/llama.cpp:server-cuda
     container_name: ctch-llama-tb
     restart: unless-stopped
+    profiles: [default]
     ports:
       - "8081:8081"
     volumes:
@@ -41,6 +42,34 @@ services:
     networks:
       - ctch-net
 
+  # Control model profile: stock LiquidAI weights without the Brilliance
+  # fine tune. Opt in with: docker compose -f docker/compose.yaml --profile stock up -d
+  # Do NOT run together with llama-tb: the Q6_K weights plus both KV caches
+  # do not fit one RTX 4070. Stop llama-tb first.
+  llama-stock:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    container_name: ctch-llama-stock
+    restart: unless-stopped
+    profiles: [stock]
+    ports:
+      - "8082:8082"
+    volumes:
+      - ../models/gguf:/models:ro
+    command:
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8082"
+      - --model
+      - /models/LFM2.5-8B-A1B-Q4_K_M.gguf
+      - -ngl
+      - "99"
+      - --ctx-size
+      - "32768"
+    gpus: all
+    networks:
+      - ctch-net
+
   phoenix:
     image: arizephoenix/phoenix:latest
     container_name: ctch-phoenix
@@ -51,6 +80,24 @@ services:
       PHOENIX_WORKING_DIR: /data
     volumes:
       - ctch-phoenix-data:/data
+    networks:
+      - ctch-net
+
+  lab:
+    image: node:24-alpine
+    container_name: ctch-lab
+    restart: unless-stopped
+    profiles: [default, stock]
+    working_dir: /lab
+    command: node src/server.js
+    ports:
+      - "3030:3030"
+    environment:
+      CATCH22_DB: /lab/scratch/lab.db
+      GUI_DIR: /lab/gui
+      PORT: "3030"
+    volumes:
+      - ..:/lab
     networks:
       - ctch-net
 
