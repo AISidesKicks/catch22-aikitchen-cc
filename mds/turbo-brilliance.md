@@ -99,8 +99,23 @@ house, plus off and help.
 
 Practical rule across all cards: **quant level gates mode power**. Q8 gives
 1.5 to 2x the strength of Q6, Q6 gives 2x+ over Q4/IQ4. Personas and
-constructs suffer first at low quants. For our 8B-A1B demo: IQ4_XS around
-5 GB, Q4_K_M 5.5 GB, Q6_K 7 GB, Q8_0 9 GB, BF16 17 GB.
+constructs suffer first at low quants. Actual file sizes in the 8B-A1B X12
+repo (checked via the HF API, oct 2026):
+
+| File | Quant | Size |
+| --- | --- | --- |
+| LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-IQ4_XS.gguf | IQ4_XS | 4.29 GB |
+| LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-MAX-IQ4_XS.gguf | IQ4_XS MAX | 4.56 GB |
+| LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-Q6_K.gguf | Q6_K | 6.48 GB |
+| LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-MAX-Q6_K.gguf | Q6_K MAX | 6.77 GB |
+| LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-Q8_0.gguf | Q8_0 | 8.39 GB |
+| LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-MAX-Q8_0.gguf | Q8_0 MAX | 8.62 GB |
+| LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-BF16.gguf | BF16 | 15.78 GB |
+
+Note the repo filename stem differs from the repo name: file prefix is
+`-Q3.8-TBrilliance-` even though the repo says `-Qwen3.8-`. The docs/index.html
+reference to `LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-MAX-IQ4_XS.gguf` matches the
+real file list.
 
 ## Sampler settings per card
 
@@ -126,6 +141,41 @@ constructs suffer first at low quants. For our 8B-A1B demo: IQ4_XS around
 - The `n_expert_used` slice (4 of 32, 4 of 64) is model metadata driven;
   some apps let you crank experts up, DavidAU suggests higher expert counts
   lift quality in some modes.
+
+## Base model honesty check (stock LiquidAI card)
+
+The X12 GGUF repos say Apache 2.0, but the stock checkpoints at LiquidAI are
+license `lfm1.0`, different from Apache, worth one sentence on the site. Also
+worth restating from the base card: LFM2.5-8B-A1B is 8.3B total / 1.5B
+active, 24 layers (18 double gated conv + 6 GQA), trained on 38T tokens, and
+LiquidAI themselves say it is **not** the best fit for heavy programming or
+knowledge heavy QA without retrieval. That matters when the audience asks us
+about coding demos.
+
+Official stock benchmarks to compare our mode runs against (LFM2.5-8B-A1B
+vs its LFM2-8B-A1B predecessor):
+
+| Benchmark | LFM2-8B-A1B | LFM2.5-8B-A1B | Delta |
+| --- | --- | --- | --- |
+| AA-Omniscience Index | -78.42 | -24.70 | +53.62 |
+| AA-Omniscience Non-Hallucination Rate | 7.46 | 63.47 | +56.01 |
+| IFEval | 79.44 | 91.84 | +12.40 |
+| IFBench | 26.00 | 56.47 | +30.47 |
+| Multi-IF | 58.54 | 79.93 | +21.39 |
+| MATH500 | 74.80 | 88.76 | +13.96 |
+| AIME25 | 20.00 | 42.53 | +22.53 |
+| BFCLv3 | 45.07 | 64.36 | +19.29 |
+| Tau2 Telecom | 13.60 | 88.07 | +74.47 |
+| Tau2 Retail | 7.02 | 39.82 | +32.80 |
+
+So the "pick your pocket" table has an anchor: IFEval 91.84 and MATH500
+88.76 at stock already, meaning our demo rows must show what the mode adds
+over the tuned reasoning model, not over a dumb baseline. Instruct cells
+claim speed wins; reasoning cells claim structure wins. Also: the stock
+model is the fastest in its size class, 18.5K output tokens per second at
+high concurrency on one H100, and pairs with the DSpark 328M drafter for
+about 2.5x faster decode with identical outputs. Our llama.cpp runs will be
+far below those numbers; the point of the demo is relative deltas.
 
 ## What we can honestly claim with our 22 matrix demo
 
