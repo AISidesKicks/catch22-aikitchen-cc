@@ -82,6 +82,49 @@ is garbled there. Live probes resolved it for the 8B:
   model". The 22 cell count on the site covers the mode NAMES; the
   honest live contrast is reasoning vs reasoning.
 
+## Short run (run-5ef5d628, 27 oct 2026)
+
+21 rows x 12 reasoning modes = 252 cells, all committed, zero permanent
+failures. One refill pass at 4096 tokens. Real findings:
+
+### Mode token ladder across all 21 rows
+
+Average completion tokens per mode, all rows:
+
+| mode | avg tokens | range | avg ms |
+| --- | --- | --- | --- |
+| medium-low | 977 | 141 to 4007 | 4070 |
+| low | 987 | 100 to 3254 | 4103 |
+| socrates | 1069 | 340 to 1954 | 4460 |
+| medium | 1117 | 136 to 4096 | 4642 |
+| logic | 1262 | 210 to 3067 | 5251 |
+| high | 1512 | 171 to 4096 | 6295 |
+| einstein | 1548 | 167 to 4096 | 6486 |
+| hyper | 1851 | 190 to 4096 | 7808 |
+| ultra | 2046 | 215 to 4096 | 8556 |
+| spoon | 2531 | 212 to 4096 | 10670 |
+| deeptree | 2536 | 169 to 4096 | 10734 |
+| omni | 2632 | 169 to 4096 | 11223 |
+
+The demo story in one table: quick tiers cluster near 1000 tokens, the
+panel/tree modes (spoon, deeptree, omni) sit 2.5x above them and are the
+slowest, ultra is the priciest "focused" tier. This ordering is what a
+visitor picks their pocket from.
+
+### Correctness
+
+- Math rows: 24 of 24 cells correct across all modes. This includes the
+  best demo beat of the whole lab: the dataset author wrote a wrong
+  expected value for the train speed row (96 km/h) and all 12 modes
+  answered 480/7 = 68.57 - the model caught the dataset, not the other
+  way around. The dataset row is fixed now.
+- IFEval rows: 24 of 24 constraint compliant (exact 3 bananas, no comma
+  sentence). The stock 91.84 IFEval score holds live across modes.
+- 62 of 252 cells hit the 3072 cap on the first pass; after one 4096
+  refill, 29 recovered and 33 remained truncated (deeptree, spoon, omni
+  on open ended tasks). Cells at cap render "chain truncated" in the GUI.
+
+
 ## Open questions for later runs
 
 - Stock LiquidAI control run (profile `stock` in compose): how much does
