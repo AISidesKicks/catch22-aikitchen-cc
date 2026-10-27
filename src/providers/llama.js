@@ -5,10 +5,11 @@ const THINK_RE = /([\s\S]*?)<\/think>/i;
 
 // LFM2.5 X12 live finding (oct 2026 server probe): reasoning arrives as
 // inline plain text before the final answer; nothing wraps it. The chains
-// of these tunes end with an "Answer:" (or "answer:") line, so fall back
-// to that as the delimiter. No match means the whole text is the answer
-// and thinking stays null. Raw text is always kept on the result too.
-const ANSWER_RE = /\nAnswer:\s*/i;
+// end with an "Answer:", "Result:" or "Final Answer:" line depending on
+// the mode, so fall back to those as delimiters. No match means the whole
+// text counts as the answer and thinking stays null. Raw text is always
+// kept on the result too.
+const ANSWER_RE = /\n(?:Answer|Result|Final answer)\s*:\s*/i;
 
 export function splitThinking(text) {
   const match = text.match(THINK_RE);
