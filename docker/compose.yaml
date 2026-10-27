@@ -1,0 +1,64 @@
+# catch22 lab stack. Everything carries the ctch- prefix per AGENTS.md.
+# The llama server is the only stateful GPU service; the worker and SQLite
+# live on the host so a kill and restart of the process is the durability
+# demo (see mds/durable-execution.md).
+#
+#   docker compose -f docker/compose.yaml up -d llama-tb
+#   Pixi env check first: pixi info | grep Name  ->  ctch
+
+name: ctch-lab
+
+services:
+  llama-tb:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    container_name: ctch-llama-tb
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    volumes:
+      - ../models/gguf:/models:ro
+    command:
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8081"
+      - --model
+      - /models/LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-Q6_K.gguf
+      - -ngl
+      - "99"
+      - --ctx-size
+      - "32768"
+      - --temp
+      - "0.2"
+      - --top-k
+      - "80"
+      - --repeat-penalty
+      - "1.05"
+      # LFM2.5 X12 card: no caching while BETA, keep KV reuse off
+      - --cache-reuse
+      - "0"
+    gpus: all
+    networks:
+      - ctch-net
+
+  phoenix:
+    image: arizephoenix/phoenix:latest
+    container_name: ctch-phoenix
+    restart: unless-stopped
+    ports:
+      - "6006:6006"
+    environment:
+      PHOENIX_WORKING_DIR: /data
+    volumes:
+      - ctch-phoenix-data:/data
+    networks:
+      - ctch-net
+
+networks:
+  ctch-net:
+    name: ctch-net
+    driver: bridge
+
+volumes:
+  ctch-phoenix-data:
+    name: ctch-phoenix-data
