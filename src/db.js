@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS cells (
   mode TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'pending',
   reply TEXT,
+  thinking TEXT,
   tokens INTEGER,
   latency_ms INTEGER,
   PRIMARY KEY (run_id, row_id, family, tag),
@@ -61,6 +62,12 @@ export function openDb(path) {
     db.exec("PRAGMA journal_mode = WAL;");
   }
   db.exec(SCHEMA);
+  // Migration: v1 pilot tables predate the thinking column. The thinking
+  // text is the valuable part for a mode-contrast demo, so keep it.
+  const cols = db.prepare(`PRAGMA table_info(cells)`).all().map((c) => c.name);
+  if (!cols.includes("thinking")) {
+    db.exec(`ALTER TABLE cells ADD COLUMN thinking TEXT;`);
+  }
   return db;
 }
 
@@ -142,11 +149,12 @@ export function recordAttempt(db, cell, seq, ok, latencyMs, error) {
 
 export function commitCell(db, cell, result) {
   db.prepare(
-    `UPDATE cells SET status = ?, reply = ?, tokens = ?, latency_ms = ?
+    `UPDATE cells SET status = ?, reply = ?, thinking = ?, tokens = ?, latency_ms = ?
      WHERE run_id = ? AND row_id = ? AND family = ? AND tag = ?`
   ).run(
     result.ok ? "done" : "failed",
     result.answer ?? null,
+    result.thinking ?? null,
     result.tokens ?? null,
     result.latencyMs ?? null,
     cell.run_id,
