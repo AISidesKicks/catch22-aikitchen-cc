@@ -91,7 +91,15 @@ export async function walk(db, opts) {
   for (;;) {
     const cell = nextCell(db, runId);
     if (!cell) break;
-    let seq = 0;
+    // Attempt numbering continues across resume/refill of the same cell,
+    // so repeated walks never collide with earlier attempt rows.
+    const seqBase = db
+      .prepare(
+        `SELECT COALESCE(MAX(seq), 0) AS m FROM attempts
+         WHERE run_id = ? AND row_id = ? AND family = ? AND tag = ?`
+      )
+      .get(cell.run_id, cell.row_id, cell.family, cell.tag).m;
+    let seq = seqBase;
     let ok = false;
     let result = null;
     while (seq < MAX_ATTEMPTS) {
@@ -123,6 +131,19 @@ export async function walk(db, opts) {
   return runId;
 }
 
+export function refillTruncated(db, runId, capTokens) {
+  // Reopen cells that finished but look truncated (generation hit the
+  // token cap). Resume reruns them; plans nothing new.
+  const res = db
+    .prepare(
+      `UPDATE cells SET status = 'pending', reply = NULL, thinking = NULL,
+              tokens = NULL, latency_ms = NULL
+       WHERE run_id = ? AND status = 'done' AND tokens >= ?`
+    )
+    .run(runId, capTokens);
+  return res.changes;
+}
+
 function parseArgs(argv) {
   const args = { positional: [], flags: {} };
   for (let i = 0; i < argv.length; i += 1) {
@@ -145,13 +166,14 @@ function parseArgs(argv) {
 
 export function flagsToOpts(flags, positional) {
   const command = positional[0];
-  if (command !== "run") {
-    throw new Error(`usage: worker run --pool <jsonl> --provider mock|llama`);
+  if (!["run", "refill"].includes(command)) {
+    throw new Error(`usage: worker run|refill --pool <jsonl> --provider mock|llama`);
   }
   const pool = flags.pool ?? "datasets/bootstrap.jsonl";
   const provider = flags.provider ?? "mock";
   const family = flags.family ?? "reasoning";
   const opts = {
+    command,
     pool,
     provider,
     family,
@@ -160,6 +182,7 @@ export function flagsToOpts(flags, positional) {
     temperature: flags.temperature ? Number(flags.temperature) : 0.2,
     maxTokens: flags.maxTokens ? Number(flags.maxTokens) : 4096,
     resume: flags.resume ?? null,
+    capTokens: flags.capTokens ? Number(flags.capTokens) : undefined,
     modes: flags.modes ? String(flags.modes).split(",") : undefined,
   };
   return opts;
@@ -172,6 +195,12 @@ async function main() {
   const { mkdirSync } = await import("node:fs");
   mkdirSync("scratch", { recursive: true });
   const db = openDb(dbPath);
+  if (opts.command === "refill") {
+    const reopened = refillTruncated(db, opts.resume, opts.capTokens ?? 2048);
+    console.log(`refill run-${opts.resume}: reopened ${reopened} truncated cells`);
+    db.close();
+    return;
+  }
   opts.rows = loadPool(opts.pool);
   const runId = await walk(db, opts);
   console.log(runId);
