@@ -194,13 +194,31 @@ far below those numbers; the point of the demo is relative deltas.
 
 ## Open questions for the lab
 
-- Does `medium-low` exist as its own token sequence on the 8B X12 (the
-  card lists it, the help menu should confirm live)?
-- Are instruct variants (`i` prefix) walked for all 12 on the 8B, or only
-  the 5 generalist ones? The 2.6B card says 12+12, the 8B card text is
-  garbled there. `{REASON:help}` live run resolves this.
+Both live, resolved 27 oct 2026 against the Q6_K weights (llama.cpp
+server-cuda, RTX 4070, 32k context):
+
+- `medium-low`: **exists** as its own mode. `{REASON:help}` prints exactly
+  the 12 matrix modes, medium-low included.
+- Instruct variants (open question 2): the honest answer is negative.
+  `{REASON:ihelp}` returns the model itself saying its help file lists no
+  instruct modes, and an A/B of `{REASON:low}` vs `{REASON:ilow}` on the
+  same prompt made ilow produce a *longer* visible chain (170 vs 67
+  completion tokens for low) with no skip-thinking behavior. So the 2.6B
+  style 12+12 claim does not transfer to the 8B, matching the garbled 8B
+  card text. v1 keeps the instruct family in the matrix (tags still sent,
+  data still collected), but the site labels the 8B instruct cells "live
+  verified: not a separate mode on this model".
 - LFM arch vs Qwen arch on xhigh support matters only when we jump sizes;
   noted above, leave xhigh out of v1.
+
+## Live server findings (26 to 27 oct 2026)
+
+- Model loads clean: 4 slots, 32768 ctx unified KV, about 9.8 of 12.2 GB
+  VRAM on the RTX 4070, health green at `ctch-llama-tb:8081`.
+- Thinking is **not** wrapped in anything on this tune: output is inline
+  plain text first, final answer last. The provider now splits on the
+  chains' "Answer:" line convention, with the wrapped-chain rule kept for
+  other models in the family.
 
 ## Sources
 
