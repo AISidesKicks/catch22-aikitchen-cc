@@ -196,8 +196,8 @@ async function main() {
   mkdirSync("scratch", { recursive: true });
   const db = openDb(dbPath);
   if (opts.command === "refill") {
-    const reopened = refillTruncated(db, opts.resume, opts.capTokens ?? 2048);
-    console.log(`refill run-${opts.resume}: reopened ${reopened} truncated cells`);
+    const reopened = refillTruncated(db, opts.resume, opts.capTokens ?? 3072);
+    console.log(`refill ${opts.resume}: reopened ${reopened} truncated cells`);
     db.close();
     return;
   }
