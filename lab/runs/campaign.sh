@@ -46,7 +46,7 @@ has() { case ",$ONLY," in *",$1,"*) return 0;; *) return 1;; esac; }
 # phase 1: stock control, no tags, 21 cells (port 8082)
 if has stock && swap llama-tb llama-stock stock 8082; then
   npm run worker -- run --provider llama --pool datasets/catch22-mode-topics.jsonl \
-    --family off --model ctch-stock --maxTokens 3072 \
+    --family off --model ctch-stock --baseUrl http://127.0.0.1:8082 --maxTokens 3072 \
     2>&1 | tee "$ART/stock-control.log" | tail -3
 fi
 
