@@ -142,15 +142,89 @@ visitor picks their pocket from.
 - Constraint following stays perfect in instruct cells too: banana and
   no comma rows 24 of 24.
 
+## Next steps campaign (28 oct 2026): control, quant ladder, mini
+
+Three more live datasets on the same hardware, plus the two no-tag
+control runs:
+
+### Control triangle (21 rows, no tag in the prompt)
+
+| run | what | total tokens | note |
+| --- | --- | --- | --- |
+| run-e54e73ea | stock LiquidAI model, no tag | 22,179 | the plain base |
+| run-10d2392e | TB tune, no tag | 30,133 | the tune alone is chattier |
+| run-5ef5d628 | TB tune, 12 tags | 12 mode averages | tags add structure on top |
+
+Findings:
+
+- The tune itself changes behavior with no tag at all: tb-off ran
+  LONGER chains than stock on several rows (card-deeptree 3072 vs 1933,
+  topic-creative 3072 vs 636, card-omni-remote 3072 vs 898) and hit the
+  cap 5 times. The Brilliance fine tune is already "reasoning flavored"
+  before any tag is sent.
+- Tagged modes add structured verbosity on top of that
+  (tb-modes-avg per row mostly above both controls).
+- Correctness on the verifiable rows is equal across the triangle:
+  stock and tb both answer 12 / 3/4 / 68.57 / banana x3 / no comma /
+  correct moon refusal. The tune does not fix math; it shapes process.
+- Best demo beat survives: both models independently computed the
+  480/7 = 68.57 km/h answer that the dataset author got wrong.
+
+### Quant ladder (same 10 rows x 12 modes on each quant)
+
+Average tokens per mode, capped cell counts (of 10 rows each):
+
+| mode | q6 tok | iq4 tok | q8 tok | capped q6/iq4/q8 |
+| --- | --- | --- | --- | --- |
+| deeptree | 1532 | 2267 | 956 | 3/7/1 |
+| einstein | 1172 | 931 | 1042 | 1/1/2 |
+| high | 745 | 989 | 1106 | 0/1/0 |
+| hyper | 1198 | 1564 | 1243 | 0/1/0 |
+| logic | 801 | 896 | 780 | 0/1/0 |
+| low | 696 | 632 | 556 | 1/1/0 |
+| medium | 581 | 794 | 784 | 0/1/0 |
+| medium-low | 514 | 866 | 846 | 0/1/1 |
+| omni | 2158 | 1944 | 1573 | 2/3/2 |
+| socrates | 943 | 885 | 1015 | 0/0/1 |
+| spoon | 1754 | 1707 | 1494 | 3/4/4 |
+| ultra | 1235 | 1634 | 1173 | 1/2/1 |
+
+Reading: quant does not just shift quality, it shifts discipline.
+
+- IQ4_XS (4.27 GB): cheapest disk, but structural modes ramble and
+  truncate most (deeptree capped 7 of 10). The "quant gates mode power"
+  card rule shows up as lost chain control.
+- Q8_0 (8.62... file is 9.01 GB): the most disciplined - deeptree
+  finishes at 956 average where q6 needs 1532 and iq4 cannot finish.
+- Q6_K: leanest on the quick tiers (medium-low 514), middle discipline.
+- Latency does not follow size: the 2.6B dense mini is SLOWER per cell
+  than the 8B sparse (1B active) sibling on structural modes. Parameter
+  count does not buy speed; active params do.
+
+### Mini 2.6B instruct ladder (run-f46398fe, full 21 rows)
+
+The 2.6B card claims a true 12+12 instruct system, and live data
+supports partial differentiation: the effort tiers are leaner than the
+8B (medium 561 vs 1286, spoon 718 vs 2566, ultra 966 vs 2130), while
+hyper, einstein and deeptree ramble even harder at this scale (capped 6
+to 8 of 21). Thinking is still visible in most cells, so instruct does
+not cleanly skip thinking here either; it saves tokens on the focused
+tiers. Verdict for the site: mini instruct = real but partial; a good
+"smaller model, less control" contrast.
+
+### Worker lessons for the log
+
+- The worker CLI now requires --provider explicitly; the campaign
+  accidentally produced three mock runs (tokens=8 everywhere) before
+  this guard. Purged from the db, kept as a lesson here.
+- Stock serves on 8082; the campaign passes --baseUrl per phase.
+
 ## Open questions for later runs
 
-- Stock LiquidAI control run (profile `stock` in compose): how much does
-  the Brilliance tune add when no tag is present? Needs the second
-  server profile, one GPU, so runs swap servers.
-- Quant ladder rows (tb-iq4, tb-q8, tb-max): same pool, same modes,
-  different quants. That is the strongest "pick your pocket" story.
-- 2.6B X12 sibling: the card claims true 12+12 there, which would make
-  instruct mode a real contrast on the small model.
+- Stock LiquidAI control done (see above). Remaining control variant:
+  stock model WITH the tag text sent as plain text (does the base model
+  react to the grammar at all?) - expect no, measure it anyway.
+- 24B-A2B 50X and 27B 50X MTP rows need more VRAM or a second machine.
 
 ## Reproduce
 
