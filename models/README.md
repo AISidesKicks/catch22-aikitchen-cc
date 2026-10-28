@@ -14,6 +14,7 @@ downloads only, never written here.
 | `tb-q8` | `LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-Q8_0.gguf` | same repo | 9,010,227,904 | quant ladder anchor |
 | `stock` | `LFM2.5-8B-A1B-Q6_K.gguf` | [LiquidAI/LFM2.5-8B-A1B-GGUF](https://huggingface.co/LiquidAI/LFM2.5-8B-A1B-GGUF) | 6,959,787,232 | control run, no Brilliance tags, same quant as tb |
 | `mini` | `LFM2.5-2.6B-Q3.8-TBrilliance-NEO-Q8_0.gguf` | [DavidAU 2.6B X12](https://huggingface.co/DavidAU/LFM2.5-2.6B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF) | 2,874,813,152 | sibling with claimed true 12+12 instruct |
+| `tb-max` | `LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-MAX-Q6_K.gguf` | [DavidAU 8B X12](https://huggingface.co/DavidAU/LFM2.5-8B-A1B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF) | 7,269,067,456 | MAX output tensor contrast; measured: no win over plain (mds/benchmarks.md) |
 
 Note the stock and tb Q6_K files are near identical sizes (both Q6_K of
 the same 8.3B base) which makes the control comparison clean. The tb Q8_0
@@ -24,7 +25,6 @@ repo tree was an older estimate; the downloaded file is authoritative).
 
 | Key | File | Role |
 | --- | --- | --- |
-| `tb-max` | `...NEO-MAX-Q6_K.gguf` | MAX output tensor contrast row |
 | `mini-iq4` | 2.6B NEO-IQ4_XS | small model quant row |
 
 ## Server profiles

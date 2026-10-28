@@ -108,7 +108,57 @@ for (const s of mini) {
   );
 }
 
-// 4. 8B instruct vs mini instruct side by side.
+// 5. MAX vs plain Q6 A/B on the same subset rows.
+console.log("=== plain Q6_K vs MAX-Q6_K (same 10 rows) ===");
+const q6sub = db
+  .prepare(
+    `SELECT mode, AVG(tokens) t, AVG(latency_ms) ms,
+            SUM(CASE WHEN tokens >= 3070 THEN 1 ELSE 0 END) cap
+     FROM cells
+     WHERE run_id = 'run-5ef5d628'
+       AND row_id IN (SELECT row_id FROM rows WHERE run_id = 'run-af261f8a')
+     GROUP BY mode`
+  )
+  .all();
+const max = db
+  .prepare(
+    `SELECT mode, AVG(tokens) t, AVG(latency_ms) ms,
+            SUM(CASE WHEN tokens >= 3070 THEN 1 ELSE 0 END) cap
+     FROM cells WHERE run_id = 'run-5d16ed4a' GROUP BY mode`
+  )
+  .all();
+const q6map = Object.fromEntries(q6sub.map((s) => [s.mode, s]));
+console.log(
+  "mode".padEnd(11),
+  "q6tok".padStart(7),
+  "maxtok".padStart(7),
+  "delta".padStart(7),
+  "| q6ms".padStart(8),
+  "maxms".padStart(7),
+  "| capped q6/max"
+);
+let tq6 = 0, tmx = 0, cq6 = 0, cmx = 0;
+for (const s of max) {
+  const a = q6map[s.mode];
+  if (!a) continue;
+  tq6 += a.t;
+  tmx += s.t;
+  cq6 += a.cap;
+  cmx += s.cap;
+  console.log(
+    s.mode.padEnd(11),
+    String(Math.round(a.t)).padStart(7),
+    String(Math.round(s.t)).padStart(7),
+    String(Math.round(s.t - a.t)).padStart(7),
+    " |",
+    String(Math.round(a.ms)).padStart(7),
+    String(Math.round(s.ms)).padStart(7),
+    " |",
+    `${a.cap}/${s.cap}`
+  );
+}
+console.log("TOTALS: q6", Math.round(tq6), "max", Math.round(tmx), "| capped", cq6 + "/" + cmx);
+
 console.log("=== 8B instruct vs mini instruct avg tokens per mode ===");
 const big8i = db
   .prepare(

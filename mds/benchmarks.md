@@ -201,7 +201,20 @@ Reading: quant does not just shift quality, it shifts discipline.
   than the 8B sparse (1B active) sibling on structural modes. Parameter
   count does not buy speed; active params do.
 
-### Mini 2.6B instruct ladder (run-f46398fe, full 21 rows)
+### MAX variant A/B (run-5d16ed4a, 28 oct 2026)
+
+The MAX tag keeps the output tensor at BF16. Card claimed extra mode
+strength; our lab measured none at Q6_K:
+
+- Same 10 rows x 12 modes: total tokens 12,948 (MAX) vs 13,330 (plain),
+  within noise; per mode deltas swing both ways.
+- Truncated cells: 17 (MAX) vs 11 (plain) - no discipline win, small
+  sample, no loss either.
+- Latency: MAX is slower per cell (bigger file, more VRAM).
+- Verdict for the audience: at this size, download the plain file. The
+  MAX variant is card claimed, not lab verified, on our matrix.
+
+## Mini 2.6B instruct ladder (run-f46398fe, full 21 rows)
 
 The 2.6B card claims a true 12+12 instruct system, and live data
 supports partial differentiation: the effort tiers are leaner than the
