@@ -151,6 +151,9 @@ Python flow (pixi ctch)  --  dataset building and manifest checks
 - [x] Written results in mds/benchmarks.md after the first real run.
 - [x] Static results page in docs/ (docs/results.html generated from the lab SQLite by npm run gui:docs).
 - [x] Instruct family walk on the full pool (252 cells committed; live verdict in mds/benchmarks.md: not a separate mode on the 8B, cells labeled honestly).
+- [x] Stock control triangle: stock no-tag vs TB no-tag vs TB tagged (the tune is reasoning flavored before any tag; see mds/benchmarks.md).
+- [x] Quant ladder: same 10 rows x 12 modes on IQ4_XS, Q6_K, Q8_0 (quant shifts discipline and cost; Q8 most disciplined, IQ4 rambles).
+- [x] 2.6B mini instruct contrast (252 cells; instruct is real but partial on the sibling).
 
 ## Infrastructure
 
