@@ -221,9 +221,14 @@ tiers. Verdict for the site: mini instruct = real but partial; a good
 
 ## Open questions for later runs
 
-- Stock LiquidAI control done (see above). Remaining control variant:
-  stock model WITH the tag text sent as plain text (does the base model
-  react to the grammar at all?) - expect no, measure it anyway.
+- All local control variants are measured now:
+  - stock no tag (run-e54e73ea) = the plain base,
+  - TB tune no tag (run-10d2392e) = the tune alone is chattier than
+    stock (30,133 vs 22,179 total tokens),
+  - stock with tag text (run-stock-tagtext, 21 plain + 21 tag text
+    cells) = the base model is **inert to the grammar**: about 2 percent
+    token delta, per row noise in both directions. The grammar only
+    exists in the fine tune. Tune reacts, stock ignores.
 - 24B-A2B 50X and 27B 50X MTP rows need more VRAM or a second machine.
 
 ## Reproduce
