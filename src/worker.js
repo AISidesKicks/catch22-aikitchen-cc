@@ -174,10 +174,15 @@ function parseArgs(argv) {
 export function flagsToOpts(flags, positional) {
   const command = positional[0];
   if (!["run", "refill"].includes(command)) {
-    throw new Error(`usage: worker run|refill --pool <jsonl> --provider mock|llama`);
+    throw new Error(`usage: worker run|refill --provider mock|llama --pool <jsonl>`);
+  }
+  // No silent defaults: mock data on a real matrix is worthless and the
+  // campaign learned that the hard way. --provider is required.
+  if (!flags.provider) {
+    throw new Error(`--provider is required (mock|llama), refuse to guess`);
   }
   const pool = flags.pool ?? "datasets/bootstrap.jsonl";
-  const provider = flags.provider ?? "mock";
+  const provider = flags.provider;
   const family = flags.family ?? "reasoning";
   const opts = {
     command,

@@ -45,34 +45,37 @@ has() { case ",$ONLY," in *",$1,"*) return 0;; *) return 1;; esac; }
 
 # phase 1: stock control, no tags, 21 cells (port 8082)
 if has stock && swap llama-tb llama-stock stock 8082; then
-  npm run worker -- run --pool datasets/catch22-mode-topics.jsonl \
+  npm run worker -- run --provider llama --pool datasets/catch22-mode-topics.jsonl \
     --family off --model ctch-stock --maxTokens 3072 \
     2>&1 | tee "$ART/stock-control.log" | tail -3
 fi
 
 # phase 2: quant ladder iq4 (subset 10 rows x 12)
 if has iq4 && swap llama-stock llama-iq4 iq4; then
-  npm run worker -- run --pool datasets/subset-quant.jsonl \
+  npm run worker -- run --provider llama --pool datasets/subset-quant.jsonl \
     --family reasoning --model ctch-tb-iq4 --maxTokens 3072 \
   2>&1 | tee "$ART/iq4-subset.log" | tail -3
 fi
 
 # phase 3: quant ladder q8 (same subset)
 if has q8 && swap llama-iq4 llama-q8 q8; then
-  npm run worker -- run --pool datasets/subset-quant.jsonl \
+  npm run worker -- run --provider llama --pool datasets/subset-quant.jsonl \
     --family reasoning --model ctch-tb-q8 --maxTokens 3072 \
     2>&1 | tee "$ART/q8-subset.log" | tail -3
 fi
 
 # phase 4: 2.6B mini instruct contrast (full pool, real instruct family)
 if has mini && swap llama-q8 llama-mini mini; then
-  npm run worker -- run --pool datasets/catch22-mode-topics.jsonl \
+  npm run worker -- run --provider llama --pool datasets/catch22-mode-topics.jsonl \
     --family instruct --model ctch-mini --maxTokens 3072 \
     2>&1 | tee "$ART/mini-instruct.log" | tail -3
 fi
 
-# phase 5: polite default restore
-$COMPOSE --profile mini stop llama-mini >/dev/null 2>&1 || true
-$COMPOSE --profile mini rm -f llama-mini >/dev/null 2>&1 || true
+# phase 5: polite default restore (stop every lab server by name first,
+# so no port 8081 holder survives the swap race)
+docker stop ctch-llama-mini ctch-llama-tb-iq4 ctch-llama-tb-q8 ctch-llama-stock \
+  >/dev/null 2>&1 || true
+docker rm -f ctch-llama-mini ctch-llama-tb-iq4 ctch-llama-tb-q8 ctch-llama-stock \
+  >/dev/null 2>&1 || true
 $COMPOSE up -d llama-tb >/dev/null
 echo "campaign done $(date -Is)"
