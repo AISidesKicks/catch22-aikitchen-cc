@@ -109,6 +109,38 @@ services:
     networks:
       - ctch-net
 
+  llama-max:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    container_name: ctch-llama-tb-max
+    restart: unless-stopped
+    profiles: [max]
+    ports:
+      - "8081:8081"
+    volumes:
+      - ../models/gguf:/models:ro
+    command:
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8081"
+      - --model
+      - /models/LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-MAX-Q6_K.gguf
+      - -ngl
+      - "99"
+      - --ctx-size
+      - "24576"
+      - --temp
+      - "0.2"
+      - --top-k
+      - "80"
+      - --repeat-penalty
+      - "1.05"
+      - --cache-reuse
+      - "0"
+    gpus: all
+    networks:
+      - ctch-net
+
   llama-mini:
     image: ghcr.io/ggml-org/llama.cpp:server-cuda
     container_name: ctch-llama-mini
