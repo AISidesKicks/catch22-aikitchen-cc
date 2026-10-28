@@ -109,6 +109,38 @@ services:
     networks:
       - ctch-net
 
+  llama-mini:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    container_name: ctch-llama-mini
+    restart: unless-stopped
+    profiles: [mini]
+    ports:
+      - "8081:8081"
+    volumes:
+      - ../models/gguf:/models:ro
+    command:
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8081"
+      - --model
+      - /models/LFM2.5-2.6B-Q3.8-TBrilliance-NEO-Q8_0.gguf
+      - -ngl
+      - "99"
+      - --ctx-size
+      - "24576"
+      - --temp
+      - "0.2"
+      - --top-k
+      - "80"
+      - --repeat-penalty
+      - "1.05"
+      - --cache-reuse
+      - "0"
+    gpus: all
+    networks:
+      - ctch-net
+
   # Control model profile: stock LiquidAI weights without the Brilliance
   # fine tune. Opt in with: docker compose -f docker/compose.yaml --profile stock up -d
   # Do NOT run together with llama-tb: the Q6_K weights plus both KV caches
