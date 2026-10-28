@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>catch22 - pick your reasoning mode</title>
+<style>
+body { font: 16px/1.6 system-ui, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px; }
+a { color: #0a66c2; }
+.dim { color: #666; font-size: 13px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; margin: 12px 0; }
+th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: left; }
+th { background: #f0f0ec; }
+h1 { margin-bottom: 0; }
+h2 { border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-top: 32px; }
+.warn { background: #fff4e0; border-left: 4px solid #e8a13a; padding: 10px 14px; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<h1>Pick your reasoning mode</h1>
+<p class="dim">Everything below is measured in our own lab: one model, one GPU, same prompts, fresh chat per cell. Live tables: <a href="/results.html">results.html</a>. Method and numbers: <a href="https://github.com/AISidesKicks/catch22-aikitchen-cc/blob/master/mds/benchmarks.md">mds/benchmarks.md</a>.</p>
+
+<div class="warn">
+<b>Honest framing first.</b> These modes are prompt behavior priming that DavidAU fine tuned into the model. Not search algorithms, not routers. Tree-of-thought output in deeptree is the model role playing the method, not real branching search. The differences you buy are output structure, effort and length. That is still a useful dial - but it is a dial on behavior, not an oracle.
+</div>
+
+<h2>The system in one paragraph</h2>
+<p>You send a mode tag as plain text with your prompt, for example <code>{REASON:logic} your question</code>. The model has been fine tuned to recognize these tags and change how it answers. No app changes, no API switches, any chat UI or HTTP call works. Two families exist: reasoning modes (<code>{REASON:omni}</code>) and instruct modes (<code>{REASON:iomni}</code>), plus <code>{REASON:off}</code> to return to stock behavior and <code>{REASON:help}</code> to ask the model itself for the menu.</p>
+
+<h2>The 12 modes, measured</h2>
+<p>Average completion tokens per mode across our 21 prompt rows (one model: LFM2.5-8B-A1B at Q6_K, RTX 4070). Token count is your money and your latency.</p>
+
+<table>
+<tr><th>tier</th><th>mode</th><th>avg tokens</th><th>what it does</th><th>pick it for</th></tr>
+<tr><td rowspan="4">quick</td><td>medium-low</td><td>977</td><td>speed first, structured but short</td><td>warm ups, drafts, chat</td></tr>
+<tr><td>low</td><td>987</td><td>minimal tokens</td><td>instant factual answers</td></tr>
+<tr><td>socrates</td><td>1069</td><td>probes your premises with questions first</td><td>critical thinking, spotting bad questions</td></tr>
+<tr><td>medium</td><td>1117</td><td>efficient professional structure</td><td>quick pro answers, the instruct default</td></tr>
+<tr><td rowspan="5">focused</td><td>logic</td><td>1262</td><td>first principles, axioms first</td><td>debugging, verification</td></tr>
+<tr><td>high</td><td>1512</td><td>thorough and balanced</td><td>the professional default</td></tr>
+<tr><td>einstein</td><td>1548</td><td>20 perspective agents brainstorm</td><td>ideation, novelty</td></tr>
+<tr><td>hyper</td><td>1851</td><td>MECE exhaustive breakdown</td><td>audits, segmentation</td></tr>
+<tr><td>ultra</td><td>2046</td><td>perfection chase</td><td>high stakes deliverables</td></tr>
+<tr><td rowspan="3">structural</td><td>spoon</td><td>2531</td><td>5 expert panel research</td><td>research synthesis</td></tr>
+<tr><td>deeptree</td><td>2536</td><td>recursive tree decomposition</td><td>root cause, planning</td></tr>
+<tr><td>omni</td><td>2632</td><td>multi dimension holistic pass</td><td>strategy, multi variable problems</td></tr>
+</table>
+
+<h2>Two findings you will not get from the model card</h2>
+<ul>
+<li><b>The low tag throttles style, not budget.</b> On easy tasks low mode is the cheapest cell by far (95 tokens for a GCD where high used 636). On a hard paradox, low mode rambled to our 4096 token cap just like ultra did. The tag tunes how it thinks, not whether it stops.</li>
+<li><b>Structural modes have effectively unbounded chains.</b> On open ended tasks, deeptree, spoon and omni hit every cap we set (2048, 3072, 4096) without finishing. Plan for a token budget when you use them.</li>
+</ul>
+
+<h2>Quant level changes discipline, not just quality</h2>
+<p>Same 10 rows x 12 modes, three quants, same GPU:</p>
+<table>
+<tr><th>quant</th><th>file size</th><th>deeptree behavior</th><th>reading</th></tr>
+<tr><td>IQ4_XS</td><td>4.27 GB</td><td>avg 2267 tok, truncated 7 of 10</td><td>cheap disk, chains lose control</td></tr>
+<tr><td>Q6_K</td><td>6.96 GB</td><td>avg 1532 tok, truncated 3 of 10</td><td>the balanced pick, leanest quick tiers</td></tr>
+<tr><td>Q8_0</td><td>9.01 GB</td><td>avg 956 tok, truncated 1 of 10</td><td>most disciplined, finishes what it starts</td></tr>
+</table>
+<p>The card rule "quant level gates mode power" shows up in our data as chain control: the lower quant rambles and truncates in structural modes, the higher quant finishes.</p>
+
+<h2>Instruct modes: what the tags really do</h2>
+<ul>
+<li><b>8B X12 model:</b> live verified - the instruct family is not a separate mode set on this tune. The model's own help menu lists no instruct modes and A/B runs show token counts within noise of the reasoning run. Send <code>{REASON:ilow}</code> if you like, but expect reasoning-grade output.</li>
+<li><b>2.6B X12 sibling:</b> instruct is real but partial. The quick tiers are genuinely leaner (medium 561 vs 1286 tokens on the 8B), yet structural modes ramble harder at small scale.</li>
+</ul>
+
+<h2>The pocket picking table</h2>
+<table>
+<tr><th>you want...</th><th>send</th><th>and expect</th></tr>
+<tr><td>an instant answer</td><td><code>{REASON:low}</code></td><td>short, correct on factual stuff, no structure</td></tr>
+<tr><td>a solid professional answer</td><td><code>{REASON:high}</code></td><td>balanced thoroughness, 1.5x the tokens of low</td></tr>
+<tr><td>a plan or root cause tree</td><td><code>{REASON:deeptree}</code></td><td>deep hierarchy, needs a token budget</td></tr>
+<tr><td>research you can trust</td><td><code>{REASON:spoon}</code></td><td>panel voices, longest chains</td></tr>
+<tr><td>the premises checked</td><td><code>{REASON:socrates}</code></td><td>questions first, catches bait questions</td></tr>
+<tr><td>exhaustive coverage</td><td><code>{REASON:hyper}</code></td><td>MECE trees, medium cost</td></tr>
+<tr><td>a decision across dimensions</td><td><code>{REASON:omni}</code></td><td>weighted verdict, priciest tier</td></tr>
+<tr><td>a small model on a small GPU</td><td>2.6B Q8 + <code>{REASON:medium}</code></td><td>lean answers, less control in deep modes</td></tr>
+</table>
+
+<h2>Try it yourself</h2>
+<p>Every claim here reproduces from the repo: <code>docker compose -f docker/compose.yaml up -d llama-tb phoenix lab</code>, then open <code>http://127.0.0.1:3030</code> and watch the matrix fill in live. Full reproduce steps in <a href="https://github.com/AISidesKicks/catch22-aikitchen-cc/blob/master/mds/benchmarks.md">mds/benchmarks.md</a>.</p>
+
+<p class="dim">Model family: DavidAU Turbo Brilliance (Apache 2.0 weights, his design). Base model: LiquidAI LFM2.5-8B-A1B. We neither own nor maintain the models; credit and support go to DavidAU.</p>
+
+<p><a href="/">back to the project page</a></p>
+
+</body>
+</html>
