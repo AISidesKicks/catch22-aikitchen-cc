@@ -5,25 +5,41 @@ README and the `.gitkeep` placeholders are tracked. Sizes verified against
 the Hugging Face file lists (oct 2026). `HF_TOKEN` from `.env` is used for
 downloads only, never written here.
 
-## Planned weights for the 22 matrix lab
+## Downloaded weights (all verified via lab/models/download.py + .sha256)
 
-| Key | File | Repo | Size | Role |
+| Key | File | Repo | Bytes | Role |
 | --- | --- | --- | --- | --- |
-| `tb` | `LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-Q6_K.gguf` | [DavidAU/LFM2.5-8B-A1B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF](https://huggingface.co/DavidAU/LFM2.5-8B-A1B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF) | 6.48 GB | default demo model, 12 reasoning modes |
-| `tb-max` | `LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-MAX-Q6_K.gguf` | same repo | 6.77 GB | quant ladder row (MAX out tensor) |
-| `tb-q8` | `LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-Q8_0.gguf` | same repo | 8.39 GB | quant ladder anchor |
-| `tb-iq4` | `LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-IQ4_XS.gguf` | same repo | 4.29 GB | quant ladder cheap end |
-| `stock` | LiquidAI `LFM2.5-8B-A1B-GGUF` Q6_K/Q8_0 | [LiquidAI/LFM2.5-8B-A1B-GGUF](https://huggingface.co/LiquidAI/LFM2.5-8B-A1B-GGUF) | see repo | control run, no Brilliance tags |
-| `mini` | `LFM2.5-2.6B-...-TBrilliance-NEO-Q8_0.gguf` | [DavidAU/LFM2.5-2.6B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF](https://huggingface.co/DavidAU/LFM2.5-2.6B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF) | see repo | stretch row, dense 2.6B sibling |
+| `tb` | `LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-Q6_K.gguf` | [DavidAU 8B X12](https://huggingface.co/DavidAU/LFM2.5-8B-A1B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF) | 6,959,819,456 | default demo model, 12 reasoning modes |
+| `tb-iq4` | `LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-IQ4_XS.gguf` | same repo | 4,588,333,760 | quant ladder cheap end |
+| `tb-q8` | `LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-Q8_0.gguf` | same repo | 9,010,227,904 | quant ladder anchor |
+| `stock` | `LFM2.5-8B-A1B-Q6_K.gguf` | [LiquidAI/LFM2.5-8B-A1B-GGUF](https://huggingface.co/LiquidAI/LFM2.5-8B-A1B-GGUF) | 6,959,787,232 | control run, no Brilliance tags, same quant as tb |
+| `mini` | `LFM2.5-2.6B-Q3.8-TBrilliance-NEO-Q8_0.gguf` | [DavidAU 2.6B X12](https://huggingface.co/DavidAU/LFM2.5-2.6B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF) | 2,874,813,152 | sibling with claimed true 12+12 instruct |
 
-Quant ladder strategy: run the pilot matrix on Q6_K first (mid price,
-card-suggested quality floor), then repeat the short pool on IQ4_XS and
-Q8_0. The MAX variants are optional extra rows if the audience asks "what
-is the MAX tag on the file anyway" - it is the BF16 output tensor trick
-(see mds/turbo-brilliance.md).
+Note the stock and tb Q6_K files are near identical sizes (both Q6_K of
+the same 8.3B base) which makes the control comparison clean. The tb Q8_0
+file is 9.01 GB - bigger than the stock Q8 listed earlier (8.39 GB on the
+repo tree was an older estimate; the downloaded file is authoritative).
 
-Disc budget for the default set: about 21 GB for tb + tb-q8 + tb-iq4 +
-stock. The BF16 file is 15.78 GB and stays a download-on-demand row.
+## Planned but not downloaded
+
+| Key | File | Role |
+| --- | --- | --- |
+| `tb-max` | `...NEO-MAX-Q6_K.gguf` | MAX output tensor contrast row |
+| `mini-iq4` | 2.6B NEO-IQ4_XS | small model quant row |
+
+## Server profiles
+
+| Container | Profile | Model | Port |
+| --- | --- | --- | --- |
+| ctch-llama-tb | default | tb Q6_K | 8081 |
+| ctch-llama-tb-iq4 | iq4 | tb IQ4_XS | 8081 |
+| ctch-llama-tb-q8 | q8 | tb Q8_0 | 8081 |
+| ctch-llama-stock | stock | stock Q6_K | 8082 |
+| ctch-llama-mini | mini | mini Q8_0 | 8081 |
+
+One RTX 4070: run one llama server at a time (the campaign script does the
+swapping). Ports 8082 for stock so a CPU offload side by side stays
+possible on bigger machines.
 
 License notes:
 
@@ -31,6 +47,5 @@ License notes:
 - LiquidAI checkpoints: `lfm1.0` license, terms differ from Apache; link
   the license page from the site, do not copy text.
 
-Download targets go through `lab/models/download.py` (to be built, style
-cloned from the doolally lab) with the file stem table above. Keep a
-`.sha256` manifest next to each downloaded file under `scratch/`.
+Download targets go through `lab/models/download.py` with the key table
+above; sha256 manifests land in `models/gguf/.sha256` next to the files.
