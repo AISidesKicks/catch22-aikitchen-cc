@@ -33,6 +33,31 @@ test("mock run completes the full pilot matrix", async () => {
   assert.equal(attempts, 4 * 12, "done cells with valid answers use one attempt each");
 });
 
+test("off family plans one no tag cell per row", async () => {
+  const db = openDb(":memory:");
+  let seen = [];
+  const spy = {
+    async generate(cfg, prompt) {
+      seen.push(prompt);
+      return { raw: "ok", thinking: null, answer: "ok", tokens: 1, latencyMs: 1 };
+    },
+  };
+  const runId = await walk(db, {
+    providerObj: spy,
+    family: "off",
+    pool: "datasets/bootstrap.jsonl",
+    model: "spy",
+    rows: ROWS,
+  });
+  const stats = Object.fromEntries(cellStats(db, runId).map((s) => [s.status, s.n]));
+  assert.equal(stats.done, ROWS.length, "one cell per row");
+  for (const prompt of seen) {
+    assert.ok(!prompt.startsWith(" "), "no leading tag or space on off family");
+  }
+  const tags = db.prepare(`SELECT tag FROM cells WHERE run_id = ?`).all(runId);
+  assert.ok(tags.every((t) => t.tag === ""), "off cells carry an empty tag");
+});
+
 test("invalid first answer gets exactly one retry", async () => {
   const db = openDb(":memory:");
   let calls = 0;

@@ -40,8 +40,10 @@ function isAnswerValid(cell, result) {
 
 async function runCell(provider, providerOpts, cell) {
   // Mode tag first; if the pool row already carries a card tag it stays
-  // part of the task text after our cell tag.
-  const prompt = `${tagFor(cell.family, cell.mode)} ${cell.prompt}`;
+  // part of the task text after our cell tag. The off family contributes
+  // no tag, so the prompt stays clean for the stock control.
+  const tag = tagFor(cell.family, cell.mode);
+  const prompt = tag ? `${tag} ${cell.prompt}` : cell.prompt;
   try {
     const result = await provider.generate(providerOpts, prompt);
     const ok = isAnswerValid(cell, result);

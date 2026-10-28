@@ -19,6 +19,9 @@ export const MODES = [
 export const FAMILIES = {
   reasoning: (mode) => `{REASON:${mode}}`,
   instruct: (mode) => `{REASON:i${mode}}`,
+  // Baseline family: no tag travels in the prompt. Used for the
+  // {REASON:off} idea on the tune and for the stock model control.
+  off: () => "",
 };
 
 export function tagFor(family, mode) {

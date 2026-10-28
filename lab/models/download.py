@@ -27,6 +27,10 @@ WEIGHTS = {
         "DavidAU/LFM2.5-8B-A1B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF",
         "LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-Q6_K.gguf",
     ),
+    "stock": (
+        "LiquidAI/LFM2.5-8B-A1B-GGUF",
+        "LFM2.5-8B-A1B-Q6_K.gguf",
+    ),
     "tb-max": (
         "DavidAU/LFM2.5-8B-A1B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF",
         "LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-MAX-Q6_K.gguf",

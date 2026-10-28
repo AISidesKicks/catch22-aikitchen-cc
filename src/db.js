@@ -87,8 +87,10 @@ export function createRun(db, { id, provider, model, family, pool, rows }) {
 }
 
 // Plans the cells for a run. Idempotent: OR IGNORE keeps committed state
-// safe when resuming with the same pool and family.
+// safe when resuming with the same pool and family. The off family plans
+// one cell per row (no tag); tag lives empty in the db.
 export function planCells(db, runId, family, modes) {
+  const effective = family === "off" ? ["off"] : modes;
   const insert = db.prepare(
     `INSERT OR IGNORE INTO cells (run_id, row_id, family, tag, mode)
      VALUES (?, ?, ?, ?, ?)`
@@ -97,7 +99,7 @@ export function planCells(db, runId, family, modes) {
     .prepare(`SELECT row_id FROM rows WHERE run_id = ? ORDER BY position`)
     .all(runId);
   for (const { row_id } of rows) {
-    for (const mode of modes) {
+    for (const mode of effective) {
       insert.run(runId, row_id, family, tagFor(family, mode), mode);
     }
   }

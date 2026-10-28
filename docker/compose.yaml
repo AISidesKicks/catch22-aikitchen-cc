@@ -42,6 +42,73 @@ services:
     networks:
       - ctch-net
 
+  # Quant ladder profiles: same service shape, different weight file.
+  # Opt in with --profile iq4 / q8. Do not run two llama servers at once
+  # (one RTX 4070). Stop the current one first.
+  llama-iq4:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    container_name: ctch-llama-tb-iq4
+    restart: unless-stopped
+    profiles: [iq4]
+    ports:
+      - "8081:8081"
+    volumes:
+      - ../models/gguf:/models:ro
+    command:
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8081"
+      - --model
+      - /models/LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-IQ4_XS.gguf
+      - -ngl
+      - "99"
+      - --ctx-size
+      - "24576"
+      - --temp
+      - "0.2"
+      - --top-k
+      - "80"
+      - --repeat-penalty
+      - "1.05"
+      - --cache-reuse
+      - "0"
+    gpus: all
+    networks:
+      - ctch-net
+
+  llama-q8:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    container_name: ctch-llama-tb-q8
+    restart: unless-stopped
+    profiles: [q8]
+    ports:
+      - "8081:8081"
+    volumes:
+      - ../models/gguf:/models:ro
+    command:
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8081"
+      - --model
+      - /models/LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-Q8_0.gguf
+      - -ngl
+      - "99"
+      - --ctx-size
+      - "24576"
+      - --temp
+      - "0.2"
+      - --top-k
+      - "80"
+      - --repeat-penalty
+      - "1.05"
+      - --cache-reuse
+      - "0"
+    gpus: all
+    networks:
+      - ctch-net
+
   # Control model profile: stock LiquidAI weights without the Brilliance
   # fine tune. Opt in with: docker compose -f docker/compose.yaml --profile stock up -d
   # Do NOT run together with llama-tb: the Q6_K weights plus both KV caches
@@ -61,11 +128,11 @@ services:
       - --port
       - "8082"
       - --model
-      - /models/LFM2.5-8B-A1B-Q4_K_M.gguf
+      - /models/LFM2.5-8B-A1B-Q6_K.gguf
       - -ngl
       - "99"
       - --ctx-size
-      - "32768"
+      - "24576"
     gpus: all
     networks:
       - ctch-net
