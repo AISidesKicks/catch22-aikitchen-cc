@@ -75,9 +75,18 @@ served by the `ctch-lab` docker service on port 3030.
 | `datasets/` | curated prompt pools with manifest and sources |
 | `lab/` | dataset builder, model downloader, run scripts, analysis |
 | `docker/` | llama.cpp, phoenix, gui services, all ctch- prefixed |
-| `mds/` | deep dives: family research, datasets, durable execution, benchmarks |
+| `mds/` | deep dives, see below |
 | `models/` | local weights, gitignored except README |
 | `tests/` | python dataset tests and node worker tests |
+
+## The deep dives (mds/)
+
+| doc | what is inside |
+| --- | --- |
+| [mds/turbo-brilliance.md](mds/turbo-brilliance.md) | the whole family mapped: 8 released models, X12 vs 50X generations, mode grammars, quant system, sampler settings, live server findings |
+| [mds/benchmarks.md](mds/benchmarks.md) | every live run with numbers: mode ladder, control triangle, quant ladder, MAX A/B, instruct verdicts, chain truncation findings |
+| [mds/demo-datasets.md](mds/demo-datasets.md) | prompt source families (card examples, benchmark picks, the Catch 22 paradox set, topics), licensing and build plan |
+| [mds/durable-execution.md](mds/durable-execution.md) | the durability research: intent before work, cell level commits, kill and resume, links to the frameworks we learned from |
 
 ## Credits
 
