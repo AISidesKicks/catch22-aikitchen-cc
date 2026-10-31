@@ -1,57 +1,300 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>catch22 - picking reasoning types and effort levels</title>
+<meta name="description" content="Same prompt, all 22 Turbo Brilliance reasoning modes, one small local model on one GPU. Pick your reasoning effort with measured numbers, not vibes.">
+<link rel="canonical" href="https://catch22.aikitchen.cc/">
+<meta name="theme-color" content="#f6f1e8">
+<meta name="color-scheme" content="light">
+<meta name="author" content="AISidesKicks">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="catch22">
+<meta property="og:url" content="https://catch22.aikitchen.cc/">
+<meta property="og:title" content="catch22 - picking reasoning types and effort levels">
+<meta property="og:description" content="Same prompt, all 22 Turbo Brilliance reasoning modes, one small local model on one GPU. Measured numbers, not vibes.">
+<meta property="og:image" content="https://catch22.aikitchen.cc/turbo-brilliance.jpeg">
+<meta property="og:locale" content="en">
+<meta name="twitter:card" content="summary_large_image">
 <style>
-body { font: 16px/1.6 system-ui, sans-serif; max-width: 780px; margin: 40px auto; padding: 0 20px; }
-a { color: #0a66c2; }
-.dim { color: #666; }
-hr { border: 0; border-top: 1px solid #ddd; margin: 24px 0; }
+  :root {
+    --paper: #f6f1e8;
+    --ink: #1f1b16;
+    --muted: #6b6257;
+    --rust: #b43a1f;
+    --line: #d9cfc0;
+    --panel: #fffaf2;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.6;
+  }
+
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 32px 20px 64px;
+  }
+
+  header {
+    padding: 24px 0 8px;
+  }
+
+  .eyebrow {
+    margin: 0 0 8px;
+    color: var(--rust);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5.6vw, 3.6rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  h1 .domain {
+    color: var(--rust);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .gh {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-decoration: none;
+    color: var(--rust);
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+    padding: 0.2rem 0.6rem;
+    background: var(--panel);
+    vertical-align: middle;
+    margin-left: 0.5rem;
+  }
+
+  .gh:hover {
+    border-color: var(--rust);
+  }
+
+  .lede {
+    max-width: 640px;
+    margin: 18px 0 0;
+    color: var(--muted);
+    font-size: 1.15rem;
+  }
+
+  .status {
+    display: inline-block;
+    margin: 18px 0 0;
+    padding: 6px 10px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .hero {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 28px 0 8px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+  }
+
+  .caption {
+    margin: 0 0 8px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  section {
+    padding: 32px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  h2 {
+    margin: 0 0 12px;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    margin: 0 0 14px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin: 18px 0 20px;
+  }
+
+  .stat {
+    padding: 14px 12px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+
+  .stat strong {
+    display: block;
+    font-size: 1.5rem;
+    line-height: 1.1;
+  }
+
+  .stat span {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  ol,
+  ul {
+    margin: 0;
+    padding-left: 22px;
+  }
+
+  li {
+    margin: 8px 0;
+  }
+
+  a {
+    color: var(--rust);
+  }
+
+  code {
+    padding: 1px 5px;
+    background: #efe6d8;
+    border-radius: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+    overflow-wrap: anywhere;
+  }
+
+  .callout {
+    padding: 14px 16px;
+    background: var(--panel);
+    border-left: 4px solid var(--rust);
+    border-radius: 0 8px 8px 0;
+  }
+
+  .callout p:last-child {
+    margin-bottom: 0;
+  }
+
+  footer {
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  footer .gh {
+    margin-left: 0;
+  }
+
+  @media (max-width: 620px) {
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    h1 {
+      font-size: clamp(1.4rem, 6.5vw, 2rem);
+    }
+  }
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<h1>catch22</h1>
-<p class="dim">Helping people understand how to select reasoning types and effort levels. Static project page; the live lab matrix is at /results.html.</p>
+<header>
+  <p class="eyebrow">catch22 - a reasoning effort lab</p>
+  <h1><span class="domain">catch22.aikitchen.cc</span> <a class="gh" href="https://github.com/AISidesKicks/catch22-aikitchen-cc">github</a></h1>
+  <p class="lede">Helping people understand how to select reasoning types and effort levels. Static project page; the live lab matrix is at <a href="/results.html">/results.html</a>.</p>
+  <p class="status">Status: the lab is measured. 11 runs, 1,296 cells, 1.68M generated tokens, every control variant answered.</p>
+</header>
 
-<p><img src="/turbo-brilliance.jpeg" alt="Turbo Brilliance - AI constructs, 50x reasoning / instruct" style="width:100%; max-width:780px; border-radius:10px; border:1px solid #ddd;" loading="lazy"></p>
+<img class="hero" src="/turbo-brilliance.jpeg" alt="Turbo Brilliance - AI constructs, 50x reasoning / instruct">
+<p class="caption">Turbo-Brilliance - AI Constructs, 50x Reasoning / Instruct. Artwork and model design by DavidAU (David Belton).</p>
 
-<p>DavidAU (David Belton)</p>
+<main>
 
-<p>Turbo-Brilliance - AI Constructs, 50x Reasoning / Instruct</p>
+<section id="numbers">
+  <h2>The lab in numbers</h2>
+  <div class="stats">
+    <div class="stat"><strong>22</strong><span>matrix cells: 12 reasoning + 12 instruct</span></div>
+    <div class="stat"><strong>1,296</strong><span>measured cells, same 21 prompts</span></div>
+    <div class="stat"><strong>1.68M</strong><span>tokens generated and counted</span></div>
+    <div class="stat"><strong>1</strong><span>GPU, one model at a time</span></div>
+  </div>
+  <p>New here? Start with the guide: <a href="/modes.html">Pick your reasoning mode</a>. It is built from the same numbers, not from the model card.</p>
+</section>
 
-<p><a href="https://huggingface.co/DavidAU/LFM2.5-8B-A1B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF">https://huggingface.co/DavidAU/LFM2.5-8B-A1B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF</a></p>
+<section id="model">
+  <h2>The model</h2>
+  <p>DavidAU (David Belton)</p>
+  <p>Turbo-Brilliance - AI Constructs, 50x Reasoning / Instruct</p>
+  <p><a href="https://huggingface.co/DavidAU/LFM2.5-8B-A1B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF">https://huggingface.co/DavidAU/LFM2.5-8B-A1B-Qwen3.8-Turbo-Brilliance-Power-X12-NEO-MAX-GGUF</a></p>
+  <p><code>LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-MAX-IQ4_XS.gguf</code></p>
+</section>
 
-<p>LFM2.5-8B-A1B-Q3.8-TBrilliance-NEO-MAX-IQ4_XS.gguf</p>
+<section id="effort">
+  <h2>Fuu! Effort levels!!!</h2>
+  <ul>
+    <li><a href="https://www.youtube.com/watch?v=Q876SRB_-1M">https://www.youtube.com/watch?v=Q876SRB_-1M</a></li>
+    <li><a href="https://claude.com/resources/articles/claude-model-and-effort-level-in-claude-code">https://claude.com/resources/articles/claude-model-and-effort-level-in-claude-code</a></li>
+  </ul>
+</section>
 
-<hr>
+<section id="catch22">
+  <h2>Named after Catch-22</h2>
+  <p><a href="https://en.wikipedia.org/wiki/Catch-22">https://en.wikipedia.org/wiki/Catch-22</a></p>
+  <p>A Catch-22 is a paradoxical, no-win situation from which an individual cannot escape because of mutually contradictory rules, conditions, or circular logic.</p>
+  <p>The classic military rule: You can be excused from dangerous combat missions only if you are insane, but asking to be excused proves you are rational and sane enough to fly.</p>
+</section>
 
-<p>Fuu! Effort levels!!!</p>
-<p><a href="https://www.youtube.com/watch?v=Q876SRB_-1M">https://www.youtube.com/watch?v=Q876SRB_-1M</a><br>
-<a href="https://claude.com/resources/articles/claude-model-and-effort-level-in-claude-code">https://claude.com/resources/articles/claude-model-and-effort-level-in-claude-code</a></p>
+<section id="notes">
+  <h2>Project notes</h2>
+  <ul>
+    <li><a href="/modes.html">Pick your reasoning mode - the guide</a> (the mission page, built from lab data)</li>
+    <li><a href="/results.html">Lab results: the mode matrix run</a> (generated from the lab SQLite)</li>
+    <li><a href="https://github.com/AISidesKicks/catch22-aikitchen-cc/blob/master/mds/turbo-brilliance.md">Deep dive: the Turbo Brilliance family</a></li>
+    <li><a href="https://github.com/AISidesKicks/catch22-aikitchen-cc/blob/master/mds/benchmarks.md">Live run numbers and honest framing</a></li>
+    <li><a href="https://github.com/AISidesKicks/catch22-aikitchen-cc/blob/master/INTENT.md">Project intent: the 22 cell matrix</a></li>
+  </ul>
+</section>
 
-<hr>
+<section id="honesty">
+  <div class="callout">
+    <p>Honesty note: the modes are prompt behavior priming fine tuned into the model at training time, not search algorithms. The lab shows mode shape and effort trade offs, one model family, four quants, one GPU.</p>
+  </div>
+</section>
 
-<p>Named after <a href="https://en.wikipedia.org/wiki/Catch-22">https://en.wikipedia.org/wiki/Catch-22</a></p>
+</main>
 
-<p>A Catch-22 is a paradoxical, no-win situation from which an individual cannot escape because of mutually contradictory rules, conditions, or circular logic.</p>
+<footer>
+  <p>catch22 - an educational lab about picking reasoning types and effort levels.</p>
+  <p>Last updated: <time datetime="2026-10-31">31 October 2026</time>.</p>
+  <p><a class="gh" href="https://github.com/AISidesKicks/catch22-aikitchen-cc">github.com/AISidesKicks/catch22-aikitchen-cc</a></p>
+</footer>
 
-<p>The classic military rule: You can be excused from dangerous combat missions only if you are insane, but asking to be excused proves you are rational and sane enough to fly.</p>
-
-<hr>
-
-<h2>Project notes</h2>
-<ul>
-  <li><a href="/modes.html">Pick your reasoning mode - the guide</a> (the mission page, built from lab data)</li>
-  <li><a href="/results.html">Lab results: the mode matrix run</a> (generated from the lab SQLite)</li>
-  <li><a href="https://github.com/AISidesKicks/catch22-aikitchen-cc/blob/master/mds/turbo-brilliance.md">Deep dive: the Turbo Brilliance family</a></li>
-  <li><a href="https://github.com/AISidesKicks/catch22-aikitchen-cc/blob/master/mds/benchmarks.md">Live run numbers and honest framing</a></li>
-  <li><a href="https://github.com/AISidesKicks/catch22-aikitchen-cc/blob/master/INTENT.md">Project intent: the 22 cell matrix</a></li>
-</ul>
-
-<p class="dim">Honesty note: the modes are prompt behavior priming fine tuned into the model at training time, not search algorithms. The lab shows mode shape and effort trade offs, one model, one quant, one GPU.</p>
-
+</div>
 </body>
 </html>
