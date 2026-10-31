@@ -165,6 +165,47 @@
     font-size: 0.85rem;
   }
 
+  .tier {
+    margin: 0 0 16px;
+  }
+
+  .tier-name {
+    margin: 0 0 8px;
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .chips {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .chip {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 10px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+
+  .chip code {
+    padding: 0;
+    background: none;
+    color: var(--rust);
+    font-size: 0.8rem;
+  }
+
+  .chip span {
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
   ol,
   ul {
     margin: 0;
@@ -215,6 +256,10 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .chips {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     h1 {
       font-size: clamp(1.4rem, 6.5vw, 2rem);
     }
@@ -236,6 +281,45 @@
 
 <main>
 
+<section id="types">
+  <h2>The reasoning types</h2>
+  <p>Twelve reasoning modes, sent as plain text with your prompt, ordered by measured effort: average completion tokens per row across our 21 prompt set.</p>
+
+  <div class="tier">
+    <p class="tier-name">quick</p>
+    <div class="chips">
+      <div class="chip"><code>{REASON:medium-low}</code><span>977 tok avg</span></div>
+      <div class="chip"><code>{REASON:low}</code><span>987 tok avg</span></div>
+      <div class="chip"><code>{REASON:socrates}</code><span>1,069 tok avg</span></div>
+      <div class="chip"><code>{REASON:medium}</code><span>1,117 tok avg</span></div>
+    </div>
+  </div>
+
+  <div class="tier">
+    <p class="tier-name">focused</p>
+    <div class="chips">
+      <div class="chip"><code>{REASON:logic}</code><span>1,262 tok avg</span></div>
+      <div class="chip"><code>{REASON:high}</code><span>1,512 tok avg</span></div>
+      <div class="chip"><code>{REASON:einstein}</code><span>1,548 tok avg</span></div>
+      <div class="chip"><code>{REASON:hyper}</code><span>1,851 tok avg</span></div>
+      <div class="chip"><code>{REASON:ultra}</code><span>2,046 tok avg</span></div>
+    </div>
+  </div>
+
+  <div class="tier">
+    <p class="tier-name">structural</p>
+    <div class="chips">
+      <div class="chip"><code>{REASON:spoon}</code><span>2,531 tok avg</span></div>
+      <div class="chip"><code>{REASON:deeptree}</code><span>2,536 tok avg</span></div>
+      <div class="chip"><code>{REASON:omni}</code><span>2,632 tok avg</span></div>
+    </div>
+  </div>
+
+  <p>Plus <code>{REASON:off}</code> to return to stock behavior and <code>{REASON:help}</code> to ask the model for its own menu.</p>
+  <p>The instruct family is the same 12 modes with an <code>i</code> prefix, for example <code>{REASON:ilow}</code>. On the 8B tune we measured instruct inert: token counts within noise of reasoning. The 2.6B sibling is real but partial. On this model, pick from the list above.</p>
+  <p><a href="/modes.html">The full guide: what each mode does and when to pick it</a>, with the pocket picking table and the findings the model card does not tell you.</p>
+</section>
+
 <section id="numbers">
   <h2>The lab in numbers</h2>
   <div class="stats">
@@ -244,7 +328,6 @@
     <div class="stat"><strong>1.68M</strong><span>tokens generated and counted</span></div>
     <div class="stat"><strong>1</strong><span>GPU, one model at a time</span></div>
   </div>
-  <p>New here? Start with the guide: <a href="/modes.html">Pick your reasoning mode</a>. It is built from the same numbers, not from the model card.</p>
 </section>
 
 <section id="model">
