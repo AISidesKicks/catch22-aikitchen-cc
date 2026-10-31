@@ -87,12 +87,14 @@ function renderResultsPage() {
         .join("");
       return `
 <section>
-  <h2>${esc(run.id)} (${esc(run.family)}, ${esc(run.status)})</h2>
-  <p>${run.model} - ${doneCells} of ${run.planned} cells committed.</p>
-  <table border="1">
-    <tr><th>row</th>${modes.map((m) => `<th>${m}</th>`).join("")}</tr>
-    ${grids}
-  </table>
+  <h2>${esc(run.id)} <span class="tag">${esc(run.family)}, ${esc(run.status)}</span></h2>
+  <p class="meta">${esc(run.model)} - ${doneCells} of ${run.planned} cells committed.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <tr><th>row</th>${modes.map((m) => `<th>${m}</th>`).join("")}</tr>
+      ${grids}
+    </table>
+  </div>
 </section>`;
     })
     .join("\n");
@@ -101,19 +103,196 @@ function renderResultsPage() {
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>catch22 lab results</title>
+<meta name="description" content="Every committed cell from the catch22 lab: rows by prompt, columns by reasoning mode, one local model on one GPU.">
+<meta name="theme-color" content="#f6f1e8">
+<meta name="color-scheme" content="light">
 <style>
-body { font: 14px/1.5 system-ui, sans-serif; margin: 24px; background: #f7f7f5; }
-table { border-collapse: collapse; width: 100%; font-size: 12px; }
-th, td { border: 1px solid #bbb; padding: 6px; text-align: left; vertical-align: top; max-width: 260px; }
-h1, h2 { font-weight: 600; }
-.dim { color: #666; }
+  :root {
+    --paper: #f6f1e8;
+    --ink: #1f1b16;
+    --muted: #6b6257;
+    --rust: #b43a1f;
+    --line: #d9cfc0;
+    --panel: #fffaf2;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.6;
+  }
+
+  .wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 20px 64px;
+  }
+
+  header {
+    padding: 24px 0 8px;
+  }
+
+  .eyebrow {
+    margin: 0 0 8px;
+    color: var(--rust);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5.6vw, 3.2rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .lede {
+    max-width: 720px;
+    margin: 18px 0 0;
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+
+  .status {
+    display: inline-block;
+    margin: 18px 0 0;
+    padding: 6px 10px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .hint {
+    display: none;
+  }
+
+  @media (max-width: 1240px) {
+    .hint {
+      display: block;
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  }
+
+  section {
+    padding: 32px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  h2 {
+    margin: 0 0 8px;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+  }
+
+  .tag {
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .meta {
+    margin: 0 0 14px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  a {
+    color: var(--rust);
+  }
+
+  .scroll {
+    overflow-x: auto;
+  }
+
+  .matrix {
+    width: 100%;
+    min-width: 1180px;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .matrix th,
+  .matrix td {
+    padding: 9px 8px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+    max-width: 260px;
+  }
+
+  .matrix th {
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .matrix th:first-child {
+    min-width: 130px;
+  }
+
+  .matrix td b {
+    color: var(--rust);
+    font-size: 0.78rem;
+  }
+
+  .gh {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--rust);
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+    padding: 0.2rem 0.6rem;
+    background: var(--panel);
+  }
+
+  .gh:hover {
+    border-color: var(--rust);
+  }
+
+  footer {
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
 </style>
 </head>
 <body>
-<h1>catch22 lab results</h1>
-<p class="dim">Generated ${payload.generated} from the lab SQLite by src/exports.js. Modes are prompt priming fine tuned into the model, not search algorithms. Chain truncated means the cell hit the worker token cap.</p>
+<div class="wrap">
+<header>
+  <p class="eyebrow">catch22 - the raw matrix</p>
+  <h1>Lab results</h1>
+  <p class="lede">Every committed cell from the lab SQLite: one section per run, rows by prompt, columns by mode. Answers are inline, cut at 900 characters. Modes are prompt priming fine tuned into the model, not search algorithms.</p>
+  <p class="status">Generated ${payload.generated} from the lab SQLite by src/exports.js. Chain truncated means the cell hit the worker token cap.</p>
+  <p class="hint">On a narrow screen, scroll each table sideways to see every mode.</p>
+</header>
+<main>
 ${sections}
+</main>
+<footer>
+  <p>catch22 - the raw matrix behind the guide. Same prompts, every mode, one GPU.</p>
+  <p><a class="gh" href="/modes.html">the guide</a> <a class="gh" href="/">project page</a></p>
+</footer>
+</div>
 </body>
 </html>
 `;

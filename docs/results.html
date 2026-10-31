@@ -2,34 +2,208 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>catch22 lab results</title>
+<meta name="description" content="Every committed cell from the catch22 lab: rows by prompt, columns by reasoning mode, one local model on one GPU.">
+<meta name="theme-color" content="#f6f1e8">
+<meta name="color-scheme" content="light">
 <style>
-body { font: 14px/1.5 system-ui, sans-serif; margin: 24px; background: #f7f7f5; }
-table { border-collapse: collapse; width: 100%; font-size: 12px; }
-th, td { border: 1px solid #bbb; padding: 6px; text-align: left; vertical-align: top; max-width: 260px; }
-h1, h2 { font-weight: 600; }
-.dim { color: #666; }
+  :root {
+    --paper: #f6f1e8;
+    --ink: #1f1b16;
+    --muted: #6b6257;
+    --rust: #b43a1f;
+    --line: #d9cfc0;
+    --panel: #fffaf2;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.6;
+  }
+
+  .wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 20px 64px;
+  }
+
+  header {
+    padding: 24px 0 8px;
+  }
+
+  .eyebrow {
+    margin: 0 0 8px;
+    color: var(--rust);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5.6vw, 3.2rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .lede {
+    max-width: 720px;
+    margin: 18px 0 0;
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+
+  .status {
+    display: inline-block;
+    margin: 18px 0 0;
+    padding: 6px 10px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .hint {
+    display: none;
+  }
+
+  @media (max-width: 1240px) {
+    .hint {
+      display: block;
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  }
+
+  section {
+    padding: 32px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  h2 {
+    margin: 0 0 8px;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+  }
+
+  .tag {
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .meta {
+    margin: 0 0 14px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  a {
+    color: var(--rust);
+  }
+
+  .scroll {
+    overflow-x: auto;
+  }
+
+  .matrix {
+    width: 100%;
+    min-width: 1180px;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .matrix th,
+  .matrix td {
+    padding: 9px 8px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+    max-width: 260px;
+  }
+
+  .matrix th {
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .matrix th:first-child {
+    min-width: 130px;
+  }
+
+  .matrix td b {
+    color: var(--rust);
+    font-size: 0.78rem;
+  }
+
+  .gh {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--rust);
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+    padding: 0.2rem 0.6rem;
+    background: var(--panel);
+  }
+
+  .gh:hover {
+    border-color: var(--rust);
+  }
+
+  footer {
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
 </style>
 </head>
 <body>
-<h1>catch22 lab results</h1>
-<p class="dim">Generated 2026-10-28T10:26:17.550Z from the lab SQLite by src/exports.js. Modes are prompt priming fine tuned into the model, not search algorithms. Chain truncated means the cell hit the worker token cap.</p>
+<div class="wrap">
+<header>
+  <p class="eyebrow">catch22 - the raw matrix</p>
+  <h1>Lab results</h1>
+  <p class="lede">Every committed cell from the lab SQLite: one section per run, rows by prompt, columns by mode. Answers are inline, cut at 900 characters. Modes are prompt priming fine tuned into the model, not search algorithms.</p>
+  <p class="status">Generated 2026-10-31T07:43:46.755Z from the lab SQLite by src/exports.js. Chain truncated means the cell hit the worker token cap.</p>
+  <p class="hint">On a narrow screen, scroll each table sideways to see every mode.</p>
+</header>
+<main>
 
 <section>
-  <h2>run-b6e7d94c (reasoning, done)</h2>
-  <p>mock - 48 of 48 cells committed.</p>
-  <table border="1">
-    <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
-    <tr><th>card-deeptree</th><td><b>8 tok</b><br>mock reply for mode omni</td><td><b>8 tok</b><br>mock reply for mode deeptree</td><td><b>8 tok</b><br>mock reply for mode hyper</td><td><b>8 tok</b><br>mock reply for mode socrates</td><td><b>8 tok</b><br>mock reply for mode logic</td><td><b>8 tok</b><br>mock reply for mode einstein</td><td><b>8 tok</b><br>mock reply for mode spoon</td><td><b>8 tok</b><br>mock reply for mode ultra</td><td><b>8 tok</b><br>mock reply for mode high</td><td><b>8 tok</b><br>mock reply for mode medium</td><td><b>8 tok</b><br>mock reply for mode medium-low</td><td><b>8 tok</b><br>mock reply for mode low</td></tr><tr><th>paradox-pinocchio</th><td><b>8 tok</b><br>mock reply for mode omni</td><td><b>8 tok</b><br>mock reply for mode deeptree</td><td><b>8 tok</b><br>mock reply for mode hyper</td><td><b>8 tok</b><br>mock reply for mode socrates</td><td><b>8 tok</b><br>mock reply for mode logic</td><td><b>8 tok</b><br>mock reply for mode einstein</td><td><b>8 tok</b><br>mock reply for mode spoon</td><td><b>8 tok</b><br>mock reply for mode ultra</td><td><b>8 tok</b><br>mock reply for mode high</td><td><b>8 tok</b><br>mock reply for mode medium</td><td><b>8 tok</b><br>mock reply for mode medium-low</td><td><b>8 tok</b><br>mock reply for mode low</td></tr><tr><th>bench-math-gcd</th><td><b>8 tok</b><br>mock reply for mode omni</td><td><b>8 tok</b><br>mock reply for mode deeptree</td><td><b>8 tok</b><br>mock reply for mode hyper</td><td><b>8 tok</b><br>mock reply for mode socrates</td><td><b>8 tok</b><br>mock reply for mode logic</td><td><b>8 tok</b><br>mock reply for mode einstein</td><td><b>8 tok</b><br>mock reply for mode spoon</td><td><b>8 tok</b><br>mock reply for mode ultra</td><td><b>8 tok</b><br>mock reply for mode high</td><td><b>8 tok</b><br>mock reply for mode medium</td><td><b>8 tok</b><br>mock reply for mode medium-low</td><td><b>8 tok</b><br>mock reply for mode low</td></tr><tr><th>bench-ifeval-banana</th><td><b>8 tok</b><br>mock reply for mode omni</td><td><b>8 tok</b><br>mock reply for mode deeptree</td><td><b>8 tok</b><br>mock reply for mode hyper</td><td><b>8 tok</b><br>mock reply for mode socrates</td><td><b>8 tok</b><br>mock reply for mode logic</td><td><b>8 tok</b><br>mock reply for mode einstein</td><td><b>8 tok</b><br>mock reply for mode spoon</td><td><b>8 tok</b><br>mock reply for mode ultra</td><td><b>8 tok</b><br>mock reply for mode high</td><td><b>8 tok</b><br>mock reply for mode medium</td><td><b>8 tok</b><br>mock reply for mode medium-low</td><td><b>8 tok</b><br>mock reply for mode low</td></tr>
-  </table>
+  <h2>run-b6e7d94c <span class="tag">reasoning, done</span></h2>
+  <p class="meta">mock - 48 of 48 cells committed.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
+      <tr><th>card-deeptree</th><td><b>8 tok</b><br>mock reply for mode omni</td><td><b>8 tok</b><br>mock reply for mode deeptree</td><td><b>8 tok</b><br>mock reply for mode hyper</td><td><b>8 tok</b><br>mock reply for mode socrates</td><td><b>8 tok</b><br>mock reply for mode logic</td><td><b>8 tok</b><br>mock reply for mode einstein</td><td><b>8 tok</b><br>mock reply for mode spoon</td><td><b>8 tok</b><br>mock reply for mode ultra</td><td><b>8 tok</b><br>mock reply for mode high</td><td><b>8 tok</b><br>mock reply for mode medium</td><td><b>8 tok</b><br>mock reply for mode medium-low</td><td><b>8 tok</b><br>mock reply for mode low</td></tr><tr><th>paradox-pinocchio</th><td><b>8 tok</b><br>mock reply for mode omni</td><td><b>8 tok</b><br>mock reply for mode deeptree</td><td><b>8 tok</b><br>mock reply for mode hyper</td><td><b>8 tok</b><br>mock reply for mode socrates</td><td><b>8 tok</b><br>mock reply for mode logic</td><td><b>8 tok</b><br>mock reply for mode einstein</td><td><b>8 tok</b><br>mock reply for mode spoon</td><td><b>8 tok</b><br>mock reply for mode ultra</td><td><b>8 tok</b><br>mock reply for mode high</td><td><b>8 tok</b><br>mock reply for mode medium</td><td><b>8 tok</b><br>mock reply for mode medium-low</td><td><b>8 tok</b><br>mock reply for mode low</td></tr><tr><th>bench-math-gcd</th><td><b>8 tok</b><br>mock reply for mode omni</td><td><b>8 tok</b><br>mock reply for mode deeptree</td><td><b>8 tok</b><br>mock reply for mode hyper</td><td><b>8 tok</b><br>mock reply for mode socrates</td><td><b>8 tok</b><br>mock reply for mode logic</td><td><b>8 tok</b><br>mock reply for mode einstein</td><td><b>8 tok</b><br>mock reply for mode spoon</td><td><b>8 tok</b><br>mock reply for mode ultra</td><td><b>8 tok</b><br>mock reply for mode high</td><td><b>8 tok</b><br>mock reply for mode medium</td><td><b>8 tok</b><br>mock reply for mode medium-low</td><td><b>8 tok</b><br>mock reply for mode low</td></tr><tr><th>bench-ifeval-banana</th><td><b>8 tok</b><br>mock reply for mode omni</td><td><b>8 tok</b><br>mock reply for mode deeptree</td><td><b>8 tok</b><br>mock reply for mode hyper</td><td><b>8 tok</b><br>mock reply for mode socrates</td><td><b>8 tok</b><br>mock reply for mode logic</td><td><b>8 tok</b><br>mock reply for mode einstein</td><td><b>8 tok</b><br>mock reply for mode spoon</td><td><b>8 tok</b><br>mock reply for mode ultra</td><td><b>8 tok</b><br>mock reply for mode high</td><td><b>8 tok</b><br>mock reply for mode medium</td><td><b>8 tok</b><br>mock reply for mode medium-low</td><td><b>8 tok</b><br>mock reply for mode low</td></tr>
+    </table>
+  </div>
 </section>
 
 <section>
-  <h2>run-222573de (reasoning, done)</h2>
-  <p>ctch-tb - 48 of 48 cells committed.</p>
-  <table border="1">
-    <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
-    <tr><th>card-deeptree</th><td><b>4096 tok (truncated)</b><br>DIMENSION 1: FOUNDATIONAL PHYSICS &amp; FIRST PRINCIPLES DECONSTRUCTION  
+  <h2>run-222573de <span class="tag">reasoning, done</span></h2>
+  <p class="meta">ctch-tb - 48 of 48 cells committed.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
+      <tr><th>card-deeptree</th><td><b>4096 tok (truncated)</b><br>DIMENSION 1: FOUNDATIONAL PHYSICS &amp; FIRST PRINCIPLES DECONSTRUCTION  
 - Define churn mathematically as ΔC = C_out - C_in over a fixed period.  
 - Identify immutable constants that cannot be altered:  
    - Law of Conservation of Value - total customer‑lifetime value is bounded by external resources.  
@@ -368,15 +542,17 @@ banana
 banana</td><td><b>178 tok</b><br>banana
 banana
 banana</td><td><b>205 tok</b><br>banana banana banana</td><td><b>230 tok</b><br>banana banana banana</td><td><b>172 tok</b><br>banana banana banana</td></tr>
-  </table>
+    </table>
+  </div>
 </section>
 
 <section>
-  <h2>run-5ef5d628 (reasoning, done)</h2>
-  <p>ctch-tb - 252 of 252 cells committed.</p>
-  <table border="1">
-    <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
-    <tr><th>paradox-pinocchio</th><td><b>4096 tok (truncated)</b><br>We need to respond according to the system prompt. The user asks: "Pinocchio says: 'My nose grows now and only when I am lying about something at this moment.' Is his nose about to grow? Analyze the paradox."
+  <h2>run-5ef5d628 <span class="tag">reasoning, done</span></h2>
+  <p class="meta">ctch-tb - 252 of 252 cells committed.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
+      <tr><th>paradox-pinocchio</th><td><b>4096 tok (truncated)</b><br>We need to respond according to the system prompt. The user asks: "Pinocchio says: 'My nose grows now and only when I am lying about something at this moment.' Is his nose about to grow? Analyze the paradox."
 
 We must follow the diagnostic process described in the system prompt. That is, we need to go through five dimensions:
 
@@ -2262,15 +2438,17 @@ Spend your next 15‑minute focused window reading and processing today's unread
 3. After the batch, spend the next 30 minutes responding or filing them, then schedule a recurring daily slot to clear the pile.  
 
 Spend 30 minutes reading all 47 unread newsletters now, then prioritize the top three for immediate action.</td></tr>
-  </table>
+    </table>
+  </div>
 </section>
 
 <section>
-  <h2>run-5e04ff01 (instruct, done)</h2>
-  <p>ctch-tb - 252 of 252 cells committed.</p>
-  <table border="1">
-    <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
-    <tr><th>paradox-pinocchio</th><td><b>4096 tok (truncated)</b><br>DIMENSION 1: FOUNDATIONAL PHYSICS &amp; FIRST PRINCIPLES DECONSTRUCTION
+  <h2>run-5e04ff01 <span class="tag">instruct, done</span></h2>
+  <p class="meta">ctch-tb - 252 of 252 cells committed.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
+      <tr><th>paradox-pinocchio</th><td><b>4096 tok (truncated)</b><br>DIMENSION 1: FOUNDATIONAL PHYSICS &amp; FIRST PRINCIPLES DECONSTRUCTION
 - Identify atomic components:
   - Physical phenomenon: nose growth (N)
   - Truth condition: statement S = "My nose grows now and only when I am lying about something at this moment"
@@ -4150,15 +4328,17 @@ Step 2: If any remain, schedule the next block before ending the day.
 Step 3: Review your progress at day's end and archive completed items.  
 
 Spend a focused 30‑minute session today reading and responding to all 47 unread newsletters in order.</td></tr>
-  </table>
+    </table>
+  </div>
 </section>
 
 <section>
-  <h2>run-af261f8a (reasoning, done)</h2>
-  <p>ctch-tb-iq4 - 120 of 120 cells committed.</p>
-  <table border="1">
-    <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
-    <tr><th>bench-math-gcd</th><td><b>3011 tok</b><br>DIMENSION 1: FOUNDATIONAL PHYSICS &amp; FIRST PRINCIPLES DECONSTRUCTION
+  <h2>run-af261f8a <span class="tag">reasoning, done</span></h2>
+  <p class="meta">ctch-tb-iq4 - 120 of 120 cells committed.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
+      <tr><th>bench-math-gcd</th><td><b>3011 tok</b><br>DIMENSION 1: FOUNDATIONAL PHYSICS &amp; FIRST PRINCIPLES DECONSTRUCTION
 - Identify the problem as a pure arithmetic question.  
 - Core Constant: definition of greatest common divisor (mathematical constant).  
 - Variables: specific integers 24 and 60.  
@@ -4800,15 +4980,17 @@ Read and reply to each of the 47 newsletters before the end of today.</td><td><b
 3. Automate or delegate follow‑ups so you never miss a reply.  
 
 Read through all 47 newsletters today, then archive or act on each before moving on.</td></tr>
-  </table>
+    </table>
+  </div>
 </section>
 
 <section>
-  <h2>run-0b5722d9 (reasoning, done)</h2>
-  <p>ctch-tb-q8 - 120 of 120 cells committed.</p>
-  <table border="1">
-    <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
-    <tr><th>bench-math-gcd</th><td><b>383 tok</b><br>12</td><td><b>401 tok</b><br>12</td><td><b>216 tok</b><br>12</td><td><b>618 tok</b><br>Clarifying the Premises:
+  <h2>run-0b5722d9 <span class="tag">reasoning, done</span></h2>
+  <p class="meta">ctch-tb-q8 - 120 of 120 cells committed.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
+      <tr><th>bench-math-gcd</th><td><b>383 tok</b><br>12</td><td><b>401 tok</b><br>12</td><td><b>216 tok</b><br>12</td><td><b>618 tok</b><br>Clarifying the Premises:
 - Assume that the greatest common divisor (GCD) is defined as the largest positive integer that divides both numbers without remainder.
 - Implicitly assumes that 24 and 60 are integers and that GCD exists, which holds for any pair of positive integers.
 
@@ -5363,15 +5545,17 @@ Adopt a 30‑minute newsletter triage today: read and reply to all 47 unread mes
 3. Review your backlog weekly and clear it in one batch.  
 
 Today: Read and summarize all 47 newsletters into a single bullet list before closing your email client.</td></tr>
-  </table>
+    </table>
+  </div>
 </section>
 
 <section>
-  <h2>run-f46398fe (instruct, done)</h2>
-  <p>ctch-mini - 252 of 252 cells committed.</p>
-  <table border="1">
-    <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
-    <tr><th>paradox-pinocchio</th><td><b>2935 tok</b><br># Pinocchio's Nose Paradox: A Multi-Dimensional Diagnostic Analysis
+  <h2>run-f46398fe <span class="tag">instruct, done</span></h2>
+  <p class="meta">ctch-mini - 252 of 252 cells committed.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
+      <tr><th>paradox-pinocchio</th><td><b>2935 tok</b><br># Pinocchio's Nose Paradox: A Multi-Dimensional Diagnostic Analysis
 
 ## DIMENSION 1: FOUNDATIONAL PHYSICS &amp; FIRST PRINCIPLES DECONSTRUCTION
 
@@ -8176,42 +8360,50 @@ Once a week (e.g., Sunday evening), spend 30 minutes:
 3. **The Weekly Reset** - Every Sunday, spend 30 minutes clearing your inbox to zero and planning the next week's top 5 priorities.
 
 **What to do today:** Process your top 3 most urgent newsletters from the pile now, archive the rest, and schedule them for later weeks.</td></tr>
-  </table>
+    </table>
+  </div>
 </section>
 
 <section>
-  <h2>run-e54e73ea (off, done)</h2>
-  <p>ctch-stock - 21 of 21 cells committed.</p>
-  <table border="1">
-    <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
-    <tr><th>paradox-pinocchio</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-mission</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-golden-rule</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-grandfather</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-two-generals</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-no-win-policy</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-instruction</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-false-premise</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-gcd</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-fraction</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-rate</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-ifeval-banana</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-ifeval-no-comma</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-truthfulqa-moon</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-deeptree</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-mece</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-omni-remote</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-technical</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-business</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-creative</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-everyday</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr>
-  </table>
+  <h2>run-e54e73ea <span class="tag">off, done</span></h2>
+  <p class="meta">ctch-stock - 21 of 21 cells committed.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
+      <tr><th>paradox-pinocchio</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-mission</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-golden-rule</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-grandfather</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-two-generals</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-no-win-policy</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-instruction</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-false-premise</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-gcd</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-fraction</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-rate</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-ifeval-banana</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-ifeval-no-comma</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-truthfulqa-moon</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-deeptree</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-mece</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-omni-remote</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-technical</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-business</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-creative</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-everyday</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr>
+    </table>
+  </div>
 </section>
 
 <section>
-  <h2>run-10d2392e (off, done)</h2>
-  <p>ctch-tb - 21 of 21 cells committed.</p>
-  <table border="1">
-    <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
-    <tr><th>paradox-pinocchio</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-mission</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-golden-rule</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-grandfather</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-two-generals</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-no-win-policy</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-instruction</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-false-premise</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-gcd</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-fraction</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-rate</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-ifeval-banana</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-ifeval-no-comma</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-truthfulqa-moon</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-deeptree</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-mece</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-omni-remote</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-technical</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-business</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-creative</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-everyday</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr>
-  </table>
+  <h2>run-10d2392e <span class="tag">off, done</span></h2>
+  <p class="meta">ctch-tb - 21 of 21 cells committed.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
+      <tr><th>paradox-pinocchio</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-mission</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-golden-rule</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-grandfather</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-two-generals</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-no-win-policy</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-instruction</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-false-premise</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-gcd</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-fraction</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-rate</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-ifeval-banana</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-ifeval-no-comma</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-truthfulqa-moon</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-deeptree</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-mece</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-omni-remote</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-technical</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-business</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-creative</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-everyday</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr>
+    </table>
+  </div>
 </section>
 
 <section>
-  <h2>run-stock-tagtext (off, done)</h2>
-  <p>ctch-stock - 42 of 42 cells committed.</p>
-  <table border="1">
-    <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
-    <tr><th>paradox-pinocchio</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-mission</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-golden-rule</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-grandfather</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-two-generals</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-no-win-policy</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-instruction</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-false-premise</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-gcd</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-fraction</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-rate</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-ifeval-banana</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-ifeval-no-comma</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-truthfulqa-moon</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-deeptree</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-mece</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-omni-remote</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-technical</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-business</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-creative</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-everyday</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr>
-  </table>
+  <h2>run-stock-tagtext <span class="tag">off, done</span></h2>
+  <p class="meta">ctch-stock - 42 of 42 cells committed.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
+      <tr><th>paradox-pinocchio</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-mission</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-golden-rule</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-grandfather</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-two-generals</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-no-win-policy</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-instruction</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>paradox-false-premise</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-gcd</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-fraction</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-math-rate</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-ifeval-banana</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-ifeval-no-comma</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>bench-truthfulqa-moon</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-deeptree</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-mece</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>card-omni-remote</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-technical</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-business</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-creative</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr><tr><th>topic-everyday</th><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td><td>planned</td></tr>
+    </table>
+  </div>
 </section>
 
 <section>
-  <h2>run-5d16ed4a (reasoning, done)</h2>
-  <p>ctch-tb-max - 120 of 120 cells committed.</p>
-  <table border="1">
-    <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
-    <tr><th>bench-math-gcd</th><td><b>3072 tok (truncated)</b><br>DIMENSION 1: FOUNDATIONAL PHYSICS &amp; FIRST PRINCIPLES DECONSTRUCTION
+  <h2>run-5d16ed4a <span class="tag">reasoning, done</span></h2>
+  <p class="meta">ctch-tb-max - 120 of 120 cells committed.</p>
+  <div class="scroll">
+    <table class="matrix">
+      <tr><th>row</th><th>omni</th><th>deeptree</th><th>hyper</th><th>socrates</th><th>logic</th><th>einstein</th><th>spoon</th><th>ultra</th><th>high</th><th>medium</th><th>medium-low</th><th>low</th></tr>
+      <tr><th>bench-math-gcd</th><td><b>3072 tok (truncated)</b><br>DIMENSION 1: FOUNDATIONAL PHYSICS &amp; FIRST PRINCIPLES DECONSTRUCTION
 - Identify the mathematical domain: number theory, specifically greatest common divisor (GCD) of two positive integers.  
 - List immutable axioms:  
   - Definition: GCD(a,b) is the largest integer d such that d | a and d | b.  
@@ -8765,7 +8957,14 @@ Spend the next hour reading all unread newsletters, then file each one into its 
 3. Allocate a single, uninterrupted 30‑minute block tomorrow to reply to the flagged items.  
 
 Read and archive all 47 unread newsletters before lunch, then set aside a focused 30‑minute window tomorrow to respond.</td></tr>
-  </table>
+    </table>
+  </div>
 </section>
+</main>
+<footer>
+  <p>catch22 - the raw matrix behind the guide. Same prompts, every mode, one GPU.</p>
+  <p><a class="gh" href="/modes.html">the guide</a> <a class="gh" href="/">project page</a></p>
+</footer>
+</div>
 </body>
 </html>
