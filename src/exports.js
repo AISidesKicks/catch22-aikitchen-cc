@@ -290,7 +290,7 @@ ${sections}
 </main>
 <footer>
   <p>catch22 - the raw matrix behind the guide. Same prompts, every mode, one GPU.</p>
-  <p><a class="gh" href="/modes.html">the guide</a> <a class="gh" href="/">project page</a></p>
+  <p><a class="gh" href="modes.html">the guide</a> <a class="gh" href="index.html">project page</a></p>
 </footer>
 </div>
 </body>
